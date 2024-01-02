@@ -1,5 +1,6 @@
 import { useRouter } from "next/navigation";
-import { supabase } from "./supabase";
+import createSupabaseServerClient from "../libs/supabase";
+const supabase = createSupabaseServerClient();
 export class Login {
   router = useRouter();
   private failedLoginAttempts: number;
@@ -54,7 +55,7 @@ export class Login {
       if (EmailError && passwordError) {
         return { user: null, error: "Please Enter Valid Email and Password" };
       } else {
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await (await supabase).auth.signInWithPassword({
           email,
           password,
         });

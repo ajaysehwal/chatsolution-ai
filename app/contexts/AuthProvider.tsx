@@ -1,6 +1,6 @@
 "use client";
 import React, { createContext, useEffect, useState } from "react";
-import { supabase } from "../services";
+import createSupabaseServerClient from "../libs/supabase";
 import { useRouter } from "next/navigation";
 import { ManageCookies } from "../libs";
 interface AuthProviderProps {
@@ -14,7 +14,8 @@ export interface AuthContextProps {
 }
 
 export const AuthContext = createContext<AuthContextProps | null>(null);
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider: React.FC<AuthProviderProps> = async ({ children }) => {
+  const supabase=await createSupabaseServerClient();
   const [metadata, setmetauser] = useState<AuthContextProps | null>({});
   const [session, setSession] = React.useState<any>();
   const [AuthState,setAuthState]=useState<boolean>(false);
