@@ -55,16 +55,16 @@ export function SignUp({ className, ...props }: UserAuthFormProps) {
   return (
     <>
       <Toaster />
-      {toggle ? (
-        <p>
+      {!toggle ? (
+        <p className="text-gray-700 font-semibold">
           Please Check your email for confirmation{" "}
-          <a href="https://mail.google.com">Check here</a>{" "}
+          <a className="text-blue-700 underline hover:underline-none" href="https://mail.google.com">Click here</a>{" "}
         </p>
       ) : (
         <div className={cn("grid gap-6", className)} {...props}>
           <form className="w-[80%] m-auto" onSubmit={onSubmit}>
             <div className="grid gap-2">
-              <div className="grid gap-1">
+              <div className="grid gap-1"> 
                 <Label className="sr-only" htmlFor="email">
                   full name
                 </Label>

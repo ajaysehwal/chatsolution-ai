@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { SignUp } from "./components";
+
 export default function AuthenticationPage() {
   return (
     <>
