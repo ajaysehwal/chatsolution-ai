@@ -1,20 +1,8 @@
-import { useRouter } from "next/navigation";
-import createSupabaseServerClient from "../libs/supabase";
-const supabase = createSupabaseServerClient();
 export class Login {
-  router = useRouter();
-  private failedLoginAttempts: number;
-  private lastFailedLoginTimestamp: number;
-  private MAX_LOGIN_ATTEMPTS = 5;
-  private LOCK_DURATION = 60 * 60 * 1000;
   private emailPattern: RegExp;
-
   constructor() {
-    this.failedLoginAttempts = 0;
-    this.lastFailedLoginTimestamp = 0;
     this.emailPattern = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
   }
-
   protected emailValid(email: string): string | null {
     if (email === "") {
       return "Please enter your email";
@@ -25,48 +13,33 @@ export class Login {
 
     return null;
   }
-  private validatepassword(password: string) {
+  protected validatePassword(password: string): string | null {
     if (password === "") {
       return "Please enter a password";
     }
+    return null;
   }
-
-  async loginUser(
+  async loginValid(
     email: string,
     password: string
-  ): Promise<{ user: any; error: any }> {
+  ): Promise<{ status: boolean; response: string }> {
     try {
-      if (this.failedLoginAttempts >= this.MAX_LOGIN_ATTEMPTS) {
-        const elapsedTime = Date.now() - this.lastFailedLoginTimestamp;
-        if (elapsedTime < this.LOCK_DURATION) {
-          throw new Error(
-            `Account locked. Please try again after ${Math.ceil(
-              (this.LOCK_DURATION - elapsedTime) / 60000
-            )} minutes.`
-          );
-        } else {
-          this.failedLoginAttempts = 0;
-          this.lastFailedLoginTimestamp = 0;
-        }
-      }
-      const passwordError = this.validatepassword(password);
-      const EmailError = this.emailValid(email);
+      const emailError = this.emailValid(email);
+      const passwordError = this.validatePassword(password);
 
-      if (EmailError && passwordError) {
-        return { user: null, error: "Please Enter Valid Email and Password" };
-      } else {
-        const { data, error } = await (await supabase).auth.signInWithPassword({
-          email,
-          password,
-        });
-        this.router.push('/',{scroll:false})
-        this.failedLoginAttempts = 0;
-        this.lastFailedLoginTimestamp = 0;
-        return { user: data, error: error };
+      if (emailError !== null || passwordError !== null) {
+        return {
+          status: false,
+          response: "Please Enter Valid Email and Password",
+        };
       }
+      return { status: true, response: "Validation completed..." };
     } catch (error) {
-      console.error("Error during login:", error);
-      return { user: null, error: error || "Login failed" };
+      console.log("Error during login:", error);
+      return {
+        status: false,
+        response: "Login failed. Please try again later.",
+      };
     }
   }
 }

@@ -1,5 +1,4 @@
-import createSupabaseServerClient from "../libs/supabase";
-const supabase = createSupabaseServerClient();
+import { supabase } from '../libs/supabase';
 export class Register {
   private emailPattern: RegExp;
 
@@ -38,7 +37,7 @@ export class Register {
   }
 
   private validateEmail(email: string): string | null {
-    if (email === "") {
+    if(email===''){
       return "please enter your email";
     }
     if (!this.emailPattern.test(email)) {
@@ -47,48 +46,42 @@ export class Register {
 
     return null;
   }
-  public validate_name(name: string): string | null {
-    if (name === "") {
+  public validate_name(name:string):string | null{
+    if(name===""){
       return "Please enter your name";
     }
     return null;
   }
 
   async validateRegistration(
-    fullname: string,
+    fullname:string,
     email: string,
     password: string,
     confirmPassword: string
   ): Promise<{ status: boolean; response: string }> {
     const passwordError = this.validatePassword(password, confirmPassword);
     const emailError = this.validateEmail(email);
-    const nameError = this.validate_name(fullname);
+    const nameError=this.validate_name(fullname);
     if (passwordError || emailError || nameError) {
       return { status: false, response: passwordError || emailError || "" };
     }
-    return { status: true, response: "Registration is valid." };
-  }
-  async register(
-    email: string,
-    password: string,
-    fullname: string
-  ): Promise<{ data: any; error: any }> {
+     return { status: true, response: "Registration is valid." };
+   }
+   async register(email: string, password:string, fullname:string): Promise<{ data: any; error: any }> {
     try {
-      const { data, error } = await (
-        await supabase
-      ).auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: `${location.origin}`,
+          emailRedirectTo: `${location.origin}/auth/callback`,
           data: {
-            full_name: fullname,
-          },
-        },
+            full_name:fullname,
+          }
+        }
       });
       return { data, error };
     } catch (error) {
-      console.error("Error during registration:", error);
+      console.error('Error during registration:', error);
       return { data: null, error };
     }
   }
