@@ -1,9 +1,11 @@
-import React, { useContext } from "react";
+"use client";
+import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader2 } from "lucide-react";
 import { useUser } from '../hooks/useUser';
 export default function UserMessage({ query }: { query: Array<string> }) {
- const {avatar_url,full_name}= useUser();
+  const {metadata}=useUser();
+ const {full_name,avatar_url}:{full_name:string,avatar_url:string}=metadata||{full_name:"O",avatar_url:"loading.."};
   return (
     <>
       {query.map((el, index) => (

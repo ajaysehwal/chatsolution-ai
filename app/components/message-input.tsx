@@ -3,19 +3,15 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowUpIcon } from "@radix-ui/react-icons";
 import {motion} from "framer-motion"
-import {OPENAI} from "../services";
-export default function MessageInput() {
-  const [message,setmessage]=useState('');
-  const useOpenAi=new OPENAI();
-  const handleMessageGenerate=async()=>{
-    try{
-      const res=await useOpenAi.generateText(message);
-      console.log(res)
-    }catch(err){
-      console.log(err);
-    }
-  }
-  const handleSubmit=async(e:any)=>{
+interface PropsInterface{
+  handleMessageGenerate:()=>Promise<void>;
+  setmessage:React.Dispatch<React.SetStateAction<string>>;
+  message:string;
+
+}
+export default function MessageInput(props:PropsInterface) {
+  const {handleMessageGenerate,setmessage,message}=props
+ const handleSubmit=async(e:any)=>{
     e.preventDefault();
    await handleMessageGenerate();
     setTimeout(()=>{
