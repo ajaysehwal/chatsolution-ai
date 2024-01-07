@@ -2,18 +2,18 @@ import { supabase } from "../libs/supabase";
 
 interface chatdataProps {
   email: string;
-  user_id: string;
+  user_id: string | undefined;
   chat_id: string;
   chat_message: string;
   chat_response: string;
   access_token: string;
-  name:string;
+  name: string;
 }
 
 export class ManageChat {
   constructor() {}
 
-  async storeChat(chatdata:chatdataProps) {
+  async storeChat(chatdata: chatdataProps) {
     const {
       email,
       user_id,
@@ -23,27 +23,41 @@ export class ManageChat {
       access_token,
       name,
     } = chatdata;
-    const { data, error } = await supabase.from("chathistory").insert([{
-      email,
-      user_id,
-      chat_id,
-      chat_message,
-      chat_response,
-      access_token,
-      name
-    }]);
-    console.log(data, error);
+    try {
+      await supabase.from("chathistory").insert([
+        {
+          email,
+          user_id,
+          chat_id,
+          chat_message,
+          chat_response,
+          access_token,
+          name,
+        },
+      ]);
+      await this.getchatHistory(user_id, chat_id);
+    } catch (err) {
+      throw new Error(JSON.stringify(err));
+    }
   }
 
-  // Implement the logic to retrieve chat history based on the provided length.
-  async getchatHistory(length: number) {
-    try {
-      const { data, error } = await supabase.from("chathistory").select("*").limit(length);
-      console.log(data, error);
-      return data;
-    } catch (error) {
-      console.error("Error fetching chat history:", error);
-      throw error;
+  async getchatHistory(user_id: string | undefined, chat_id: string) {
+    console.log(user_id, chat_id);
+    if (user_id == undefined) {
+      throw new Error("user_id is not defined");
+    } else {
+      try {
+        const { data, error } = await supabase
+          .from("chathistory")
+          .select("chat_message,chat_response,id,user_id")
+          .eq("user_id", user_id)
+          .eq("chat_id", chat_id);
+        console.log(data);
+        return data;
+      } catch (error) {
+        console.error("Error fetching chat history:", error);
+        throw new Error("unable to get user chat data");
+      }
     }
   }
 }

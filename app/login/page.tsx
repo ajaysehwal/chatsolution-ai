@@ -7,8 +7,7 @@ import { useAuth } from "../hooks";
 import Authloading from "../components/authloading";
 
 export default function Login() {
-  
-  const { authState, authload,logOut }: { authState: boolean; authload: boolean,logOut:any } =
+   const { authState, authload,logOut }: { authState: boolean; authload: boolean,logOut:any } =
     useAuth();
   if (authload) {
     return <Authloading />;

@@ -11,6 +11,7 @@ import { Login } from "../../services";
 import { useToast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { supabase } from "../../libs/supabase";
+import { ManageCookies } from "@/app/libs";
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 export function SignIn({ className, ...props }: UserAuthFormProps) {
   const { toast } = useToast();
@@ -18,6 +19,7 @@ export function SignIn({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
+  const cookies=new ManageCookies();
   const CheckInputValidation = new Login();
   const handleSignIn = async () => {
     try {
@@ -27,13 +29,13 @@ export function SignIn({ className, ...props }: UserAuthFormProps) {
       });
       setEmail("");
       setPassword("");
-
       if (!res.data.session) {
         toast({
           variant: "destructive",
           title: res.error?.message,
         });
       } else {
+        cookies.setcookie("_S_UID_",res.data.user.id)
         return router.push("/", { scroll: false });
       }
     } catch (err) {

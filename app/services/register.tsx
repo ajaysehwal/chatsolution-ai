@@ -1,7 +1,7 @@
 import { supabase } from '../libs/supabase';
 export class Register {
   private emailPattern: RegExp;
-
+  
   constructor() {
     this.emailPattern = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
   }

@@ -10,6 +10,7 @@ import { GoogleAuth } from "../../services";
 import { Register } from "../../services";
 import { useToast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
+import { ManageCookies } from "@/app/libs";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -23,8 +24,8 @@ export function SignUp({ className, ...props }: UserAuthFormProps) {
   const [confirmPassword, setConfirmPassword] = React.useState<string>("");
   const [toggle, settoggle] = React.useState<boolean>(false);
   const Registertion = new Register();
-
-  async function onSubmit(event: React.SyntheticEvent) {
+  const cookies=new ManageCookies();
+async function onSubmit(event: React.SyntheticEvent) {
     setIsLoading(true);
     event.preventDefault();
     const isValid = await Registertion.validateRegistration(
@@ -38,7 +39,8 @@ export function SignUp({ className, ...props }: UserAuthFormProps) {
     if (isValid.status) {
       const registered = await Registertion.register(email, password, name);
       settoggle(true);
-      console.log(registered);
+      cookies.setcookie("_S_UID_",registered.data.user.id)
+      console.log(registered.data.user);
     } else {
       const error = isValid.response;
       toast({
@@ -55,7 +57,7 @@ export function SignUp({ className, ...props }: UserAuthFormProps) {
   return (
     <>
       <Toaster />
-      {!toggle ? (
+      {toggle ? (
         <p className="text-gray-700 font-semibold">
           Please Check your email for confirmation{" "}
           <a className="text-blue-700 underline hover:underline-none" href="https://mail.google.com">Click here</a>{" "}

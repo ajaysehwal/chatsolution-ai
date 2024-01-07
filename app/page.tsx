@@ -11,7 +11,7 @@ export default async function Home() {
    return redirect('/login');
    }
  return (
-    <main className="min-h-screen h-[100vh] bg-[rgb(52,53,65)]">
+    <main className="min-h-screen h-[100vh] bg-[rgb(225,226,233)]">
       <Suspense fallback={<SkeletonUI />}>
          <Main />
       </Suspense>

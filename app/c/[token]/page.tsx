@@ -13,7 +13,7 @@ export default async function ChatPage() {
    }
   return (
     <>
-     <main className="min-h-screen h-[100vh] bg-[rgb(52,53,65)]">
+     <main className="min-h-screen h-[100vh] bg-[rgb(210,211,219)]">
       <Suspense fallback={<SkeletonUI />}>
          <Main />
       </Suspense>
