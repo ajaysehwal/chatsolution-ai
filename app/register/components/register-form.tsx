@@ -39,7 +39,7 @@ async function onSubmit(event: React.SyntheticEvent) {
     if (isValid.status) {
       const registered = await Registertion.register(email, password, name);
       settoggle(true);
-      cookies.setcookie("_S_UID_",registered.data.user.id)
+      cookies.setcookie("Secure_S_UID_",registered.data.user.id)
       console.log(registered.data.user);
     } else {
       const error = isValid.response;
