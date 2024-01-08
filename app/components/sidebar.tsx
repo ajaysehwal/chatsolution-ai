@@ -3,12 +3,15 @@ import { PlusIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import ChatHistory from "./chat-history";
 import { AccountMenu } from "./account-menu";
+import Link from "next/link";
 export default function Sidebar() {
   return (
     <>
       <div className="lg:w-1/6   bg-black text-white hidden lg:block md:hidden sm:hidden">
         {/* New Chat Button */}
-        <div className="flex w-full gap-1 align-middle items-center h-[50px] justify-between p-5" style={{boxShadow: "rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px"}}>
+         <Link href={"/"}>
+         <div className="flex w-full gap-1 align-middle items-center h-[50px] justify-between p-5" style={{boxShadow: "rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px"}}>
+
           <div className="flex align-middle justify-start gap-2" style={{cursor:'pointer'}}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -23,10 +26,12 @@ export default function Sidebar() {
             <p>New Chat</p>
           </div>
 
-          <Button variant="ghost" className="hover:bg-[rgb(32,33,35)] hover:text-white">
+          <Button  variant="ghost" className="hover:bg-[rgb(32,33,35)] hover:text-white">
             <PlusIcon width="25px" height="20px" />
           </Button>
         </div>
+        </Link>
+        
         <ChatHistory />
         <div className="bg-black p-3">
           <AccountMenu />
