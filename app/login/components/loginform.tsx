@@ -35,7 +35,7 @@ export function SignIn({ className, ...props }: UserAuthFormProps) {
           title: res.error?.message,
         });
       } else {
-        cookies.setcookie("_S_UID_",res.data.user.id)
+        cookies.setcookie("Secure_S_UID_",res.data.user.id)
         return router.push("/", { scroll: false });
       }
     } catch (err) {
