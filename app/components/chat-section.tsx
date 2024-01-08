@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import MessageInput from "./message-input";
 import UserMessage from "./user-message";
 import { motion } from "framer-motion";
@@ -14,6 +14,7 @@ interface ChatMessage {
 }
 
 export default function ChatSection() {
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   const params = useParams<{ token: string }>();
   const [chatid, setChatid] = useState<string>(params.token);
   const [message, setmessage] = useState<string>("");
@@ -23,19 +24,35 @@ export default function ChatSection() {
   const router = useRouter();
   const manageChat = new ManageChat();
   const cookies = new ManageCookies();
-  const user_id = cookies.getcookie("_S_UID_");
+  const user_id = cookies.getcookie("Secure_S_UID_");
   const { metadata, userData } = useUser();
   const { full_name } = metadata;
   const [chatload, setchatload] = useState<boolean>(false);
   const { email }: any = userData;
   const { authdata } = useAuth();
   const { access_token }: any = authdata;
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  };
+
   const handleMessageGenerate = async () => {
-    try {
+     scrollToBottom();
+      try {
+       scrollToBottom();
+
       const res = await useOpenAi.generateText(message);
       if (res.status) {
         setresult(res.result);
-        
+        scrollToBottom();
+
+        const newUserMessage = {
+          chat_message: message,
+          chat_response: res.result,
+        };
+        setchatdata(prevChatData => [...prevChatData, newUserMessage]);
+        scrollToBottom();
         if (params.token) {
           manageChat.storeChat({
             email: email,
@@ -46,7 +63,8 @@ export default function ChatSection() {
             access_token: access_token,
             name: full_name,
           });
-          getChatData(user_id, chatid);
+          scrollToBottom();
+          setmessage("");
         } else {
           const newtoken = generateCode(10);
           manageChat.storeChat({
@@ -58,6 +76,8 @@ export default function ChatSection() {
             access_token: access_token,
             name: full_name,
           });
+          scrollToBottom();
+          setmessage("");
           setChatid(newtoken);
           router.push(`/c/${newtoken}`, { scroll: false });
         }
@@ -65,16 +85,24 @@ export default function ChatSection() {
         throw new Error(JSON.stringify(res.result));
       }
     } catch (err) {
+      console.log(err);
       throw new Error(JSON.stringify(err));
     }
   };
-  const getChatData = async (id: string | undefined, chatid: string) => {
+  const getChatData = async (user_id: string | undefined, chatid: string) => {
     setchatload(true);
     try {
-      const data: any = await manageChat.getchatHistory(id, chatid);
-      console.log(data);
+      const data: any = await manageChat.getChatHistory(user_id, chatid);
       if (data.length !== 0) {
-        setchatdata((prevChatdata) => [...prevChatdata, ...data]);
+        setchatdata(data);
+        scrollToBottom();
+      } else {
+        setchatdata([
+          {
+            chat_message: "Ask me anything",
+            chat_response: "How may i help you sir",
+          },
+        ]);
       }
     } catch (error) {
       console.error("Error fetching chat data:", error);
@@ -82,17 +110,22 @@ export default function ChatSection() {
       setchatload(false);
     }
   };
-
+  React.useEffect(() => {
+    scrollToBottom();
+  }, [chatdata]);
   React.useEffect(() => {
     getChatData(user_id, chatid);
   }, []);
-  console.log(chatdata);
   return (
     <>
       <div className="flex-1 bg-[rgb(55,55,58)] p-5 h-[100vh]">
-        <div className="flex-1 bg-[rgb(55,55,58)] p-5 overflow-y-scroll overflow-x-auto h-[80vh]">
+        <div
+          ref={chatContainerRef}
+          id="chatcontainer"
+          className="flex-1 bg-[rgb(55,55,58)] p-5 overflow-y-scroll overflow-x-auto h-[80vh]"
+        >
           {chatload
-            ? "loading..."
+            ?(<div className="loader m-auto"></div>)
             : chatdata?.map(
                 (el: { chat_message: string; chat_response: string }, i) => (
                   <div key={i}>
@@ -106,7 +139,10 @@ export default function ChatSection() {
                           "rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset",
                       }}
                     >
+                      <p>
                       {el.chat_response}
+                      </p>
+                    
                     </motion.div>
                   </div>
                 )
@@ -118,7 +154,7 @@ export default function ChatSection() {
             setmessage={setmessage}
           />
         </div>
-        ;
+        
       </div>
     </>
   );
