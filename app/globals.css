@@ -361,3 +361,69 @@
     stroke-dashoffset: -440;
   }
 }
+
+
+#chatcontainer{
+    scroll-behavior: smooth;
+    transition: scroll-behavior 0.5s ease-in-out;
+}
+
+
+.loader {
+  border: 4px solid rgba(241, 233, 233, 0.1);
+  border-left-color: transparent;
+  border-radius: 50%;
+}
+
+.loader {
+  border: 4px solid rgba(242, 235, 235, 0.1);
+  border-left-color: transparent;
+  width: 36px;
+  height: 36px;
+}
+
+.loader {
+  border: 4px solid rgba(244, 239, 239, 0.1);
+  border-left-color: rgb(173, 155, 155);
+  width: 36px;
+  height: 36px;
+  animation: spin89345 1s linear infinite;
+}
+
+@keyframes spin89345 {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Apply styles to the p tag */
+.airesponse {
+  overflow: hidden;
+  border-right: 2px solid #000; /* Blinking cursor */
+  white-space: nowrap; /* Prevent text from wrapping */
+  margin: 0; /* Remove default margin */
+  font-size: 20px;
+  animation: typing 3s steps(30, end) forwards, cursor 0.5s infinite alternate; /* Adjust the duration as needed */
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes cursor {
+  0%, 100% {
+    border-right-color: transparent;
+  }
+  50% {
+    border-right-color: #000;
+  }
+}
