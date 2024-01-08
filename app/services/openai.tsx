@@ -14,7 +14,7 @@ export class OPENAI {
       });
       return { status: true, response: openai };
     } catch (err) {
-      return { status: false, response: `Api error/---------16/${err}` };
+      return { status: false, response: `Api error/---------17/${err}` };
     }
   }
 
@@ -24,12 +24,19 @@ export class OPENAI {
     try {
       const { status, response } = await this.config();
       if (status) {
-        const res = await response?.chat.completions.create({
-          messages: [{ role: "user", content: message }],
+        const stream = await response?.beta.chat.completions.stream({
           model: this.model,
+          messages: [{ role: "user", content: message }],
+          stream: true,
         });
-        if (res.choices && res.choices.length > 0) {
-          const AiResponse = res.choices[0].message.content;
+        stream.on("content", (delta: any, snapshot: any)=>{
+
+        });
+        const chatCompletion = await stream.finalChatCompletion();
+        console.log(chatCompletion);
+
+        if (chatCompletion.choices && chatCompletion.choices.length > 0) {
+          const AiResponse = chatCompletion.choices[0].message.content;
           return { status: true, result: AiResponse };
         } else {
           return { status: false, result: "Empty response from OpenAI API" };
@@ -38,7 +45,7 @@ export class OPENAI {
         return { status: false, result: `Api Key error----${response}` };
       }
     } catch (err) {
-      return { status: false, result: `Api Key error/------35/${err}` };
+      return { status: false, result: `Api Key error/------48/${err}` };
     }
   }
 }

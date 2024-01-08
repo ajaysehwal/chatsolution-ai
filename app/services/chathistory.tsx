@@ -1,6 +1,6 @@
 import { supabase } from "../libs/supabase";
 
-interface chatdataProps {
+interface ChatDataProps {
   email: string;
   user_id: string | undefined;
   chat_id: string;
@@ -11,53 +11,114 @@ interface chatdataProps {
 }
 
 export class ManageChat {
-  constructor() {}
+  private static readonly CHAT_HISTORY_TABLE = "chathistory";
 
-  async storeChat(chatdata: chatdataProps) {
-    const {
-      email,
-      user_id,
-      chat_id,
-      chat_message,
-      chat_response,
-      access_token,
-      name,
-    } = chatdata;
-    try {
-      await supabase.from("chathistory").insert([
-        {
-          email,
-          user_id,
-          chat_id,
-          chat_message,
-          chat_response,
-          access_token,
-          name,
-        },
-      ]);
-      await this.getchatHistory(user_id, chat_id);
-    } catch (err) {
-      throw new Error(JSON.stringify(err));
+  private handleSupabaseError(error: any, customMessage: string) {
+    console.error(`${customMessage}: ${JSON.stringify(error)}`);
+    throw new Error(
+      `Supabase Error - ${customMessage}: Unable to process the request.`
+    );
+  }
+
+  private async executeSupabaseQuery(query: any, errorMessage: string) {
+    const { data, error } = await query;
+
+    if (error) {
+      this.handleSupabaseError(error, errorMessage);
+    }
+    console.log(data);
+
+    return data;
+  }
+
+  private checkUserId(user_id: string | undefined, errorMessage: string) {
+    if (user_id === undefined) {
+      throw new Error(errorMessage);
     }
   }
 
-  async getchatHistory(user_id: string | undefined, chat_id: string) {
-    console.log(user_id, chat_id);
-    if (user_id == undefined) {
-      throw new Error("user_id is not defined");
-    } else {
-      try {
-        const { data, error } = await supabase
-          .from("chathistory")
-          .select("chat_message,chat_response,id,user_id")
-          .eq("user_id", user_id)
-          .eq("chat_id", chat_id);
-        console.log(data);
-        return data;
-      } catch (error) {
-        console.error("Error fetching chat history:", error);
-        throw new Error("unable to get user chat data");
-      }
+  private async insertChatData(chatData: ChatDataProps) {
+    const query = supabase
+      .from(ManageChat.CHAT_HISTORY_TABLE)
+      .insert([chatData]);
+    return await this.executeSupabaseQuery(query, "Error inserting chat data");
+  }
+
+  private async selectChatHistory(
+    user_id: string | undefined,
+    chat_id: string
+  ) {
+    const query = supabase
+      .from(ManageChat.CHAT_HISTORY_TABLE)
+      .select("chat_message,chat_response,id,user_id")
+      .eq("user_id", user_id)
+      .eq("chat_id", chat_id);
+
+    return await this.executeSupabaseQuery(
+      query,
+      "Error fetching chat history"
+    );
+  }
+
+  async storeChat(chatData: ChatDataProps) {
+    const { user_id, chat_id } = chatData;
+
+    try {
+      await Promise.all([
+        this.insertChatData(chatData),
+        this.getChatHistory(user_id, chat_id),
+      ]);
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async getChatHistory(user_id: string | undefined, chat_id: string) {
+    this.checkUserId(user_id, "user_id is not defined");
+
+    try {
+      const data = await this.selectChatHistory(user_id, chat_id);
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.error("Error fetching chat history:", error);
+      throw new Error("Unable to get user chat data");
+    }
+  }
+
+  async getChatHistoryTitles(user_id: string | undefined) {
+    this.checkUserId(user_id, "user_id is not defined");
+    try {
+      const query = supabase
+        .from(ManageChat.CHAT_HISTORY_TABLE)
+        .select("chat_message,user_id,chat_id")
+        .eq("user_id", user_id);
+
+      const data = await this.executeSupabaseQuery(
+        query,
+        "Error fetching chat history titles"
+      );
+
+      const FirstChatsChatMessage: any = data?.reduce(
+        (
+          unique: {
+            has: (arg0: any) => any;
+            set: (arg0: any, arg1: any) => void;
+          },
+          current: { user_id: string | undefined; chat_id: any }
+        ) => {
+          if (current.user_id === user_id && !unique.has(current.chat_id)) {
+            unique.set(current.chat_id, current);
+          }
+          return unique;
+        },
+        new Map()
+      );
+
+      const result = Array.from(FirstChatsChatMessage.values());
+      return result;
+    } catch (error) {
+      throw new Error("Unable to get user chat data");
     }
   }
 }
