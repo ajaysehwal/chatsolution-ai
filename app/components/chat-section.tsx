@@ -33,26 +33,22 @@ export default function ChatSection() {
   const { access_token }: any = authdata;
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
     }
   };
 
   const handleMessageGenerate = async () => {
-     scrollToBottom();
-      try {
-       scrollToBottom();
-
+    try {
       const res = await useOpenAi.generateText(message);
       if (res.status) {
         setresult(res.result);
-        scrollToBottom();
 
         const newUserMessage = {
           chat_message: message,
           chat_response: res.result,
         };
-        setchatdata(prevChatData => [...prevChatData, newUserMessage]);
-        scrollToBottom();
+        setchatdata((prevChatData) => [...prevChatData, newUserMessage]);
         if (params.token) {
           manageChat.storeChat({
             email: email,
@@ -124,29 +120,28 @@ export default function ChatSection() {
           id="chatcontainer"
           className="flex-1 bg-[rgb(55,55,58)] p-5 overflow-y-scroll overflow-x-auto h-[80vh]"
         >
-          {chatload
-            ?(<div className="loader m-auto"></div>)
-            : chatdata?.map(
-                (el: { chat_message: string; chat_response: string }, i) => (
-                  <div key={i}>
-                    <div className="w-[80%] m-auto bg-gray-500 p-5 rounded-lg mt-5">
-                      <UserMessage query={el.chat_message} />
-                    </div>
-                    <motion.div
-                      className="w-[80%] m-auto bg-gray-300 p-5 rounded-lg mt-5"
-                      style={{
-                        boxShadow:
-                          "rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset",
-                      }}
-                    >
-                      <p>
-                      {el.chat_response}
-                      </p>
-                    
-                    </motion.div>
+          {chatload ? (
+            <div className="loader m-auto"></div>
+          ) : (
+            chatdata?.map(
+              (el: { chat_message: string; chat_response: string }, i) => (
+                <div key={i}>
+                  <div className="w-[80%] m-auto bg-gray-500 p-5 rounded-lg mt-5">
+                    <UserMessage query={el.chat_message} />
                   </div>
-                )
-              )}
+                  <motion.div
+                    className="w-[80%] m-auto bg-gray-300 p-5 rounded-lg mt-5"
+                    style={{
+                      boxShadow:
+                        "rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset",
+                    }}
+                  >
+                    <p>{el.chat_response}</p>
+                  </motion.div>
+                </div>
+              )
+            )
+          )}
 
           <MessageInput
             message={message}
@@ -154,7 +149,6 @@ export default function ChatSection() {
             setmessage={setmessage}
           />
         </div>
-        
       </div>
     </>
   );

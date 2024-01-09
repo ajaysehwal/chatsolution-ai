@@ -3,42 +3,26 @@ import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { ManageChat } from "../services";
 import { ManageCookies } from "../libs";
 import Link from "next/link";
-
 import {
-  Menubar,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu,
-  MenubarSeparator,
-  MenubarShortcut,
-  MenubarTrigger,
-} from "@/components/ui/menubar";
-const ChatMenu = () => {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
+
+const ChatMenuContent = () => {
   return (
-    <Menubar className="fixed left-[13%] bg-[rgb(32,33,35)] border-none w-[20px] h-[24px]">
-      <MenubarMenu>
-        <MenubarTrigger className="bg-[rgb(32,33,35)]">
-          <DotsHorizontalIcon width="15px" height="15px" />
-        </MenubarTrigger>
-        <MenubarContent>
-          <MenubarItem>
-            New Tab <MenubarShortcut>⌘T</MenubarShortcut>
-          </MenubarItem>
-          <MenubarItem>New Window</MenubarItem>
-          <MenubarSeparator />
-          <MenubarItem>Share</MenubarItem>
-          <MenubarSeparator />
-          <MenubarItem>Print</MenubarItem>
-        </MenubarContent>
-      </MenubarMenu>
-    </Menubar>
+    <ContextMenuContent>
+      <ContextMenuItem>Profile</ContextMenuItem>
+      <ContextMenuItem>Billing</ContextMenuItem>
+      <ContextMenuItem>Team</ContextMenuItem>
+      <ContextMenuItem>Subscription</ContextMenuItem>
+    </ContextMenuContent>
   );
 };
-const Loader=()=>{
-  return(
-    <div className="loader m-auto"></div>
-  )
-}
+const Loader = () => {
+  return <div className="loader m-auto"></div>;
+};
 export default function ChatHistory() {
   const managechat = new ManageChat();
   const cookies = new ManageCookies();
@@ -62,23 +46,32 @@ export default function ChatHistory() {
 
   return (
     <div className="flex flex-col gap-1 w-full h-[80vh] overflow-y-scroll mt-[10px] items-start pl-2">
-      {load
-        ? (<Loader/>)
-        : chats.map((el, index) => (
-            <div
-
-              key={index}
-              className="p-2 flex justify-between text-gray-200 align-center w-full h-[50px] hover:bg-[rgb(32,33,35)] rounded-lg"
-              style={{ cursor: "pointer",boxShadow: "5px 0 15px rgba(0, 0, 0, 0.3)" }}
-            >
-              <Link href={`/c/${el.chat_id}`}>
-                <p className="w-[210px] h-[24px] overflow-hidden">
-                  {el.chat_message}
-                </p>
-              </Link>
-              {/* {visible[index] && <ChatMenu />} */}
-            </div>
-          ))}
+      {load ? (
+        <Loader />
+      ) : (
+        chats.map((el, index) => (
+          <div
+            key={index}
+            className="p-2 flex justify-between text-gray-200 align-center w-full h-[50px] hover:bg-[rgb(32,33,35)] rounded-lg"
+            style={{
+              cursor: "pointer",
+              boxShadow: "5px 0 15px rgba(0, 0, 0, 0.3)",
+            }}
+          >
+            <Link href={`/c/${el.chat_id}`} shallow={true}>
+              <ContextMenu>
+                <ContextMenuTrigger>
+                  <p className="w-[210px] h-[24px] overflow-hidden">
+                    {el.chat_message}
+                  </p>
+                </ContextMenuTrigger>
+                <ChatMenuContent />
+              </ContextMenu>
+            </Link>
+            {/* {visible[index] && <ChatMenu />} */}
+          </div>
+        ))
+      )}
     </div>
   );
 }

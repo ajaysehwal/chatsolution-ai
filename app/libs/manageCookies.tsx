@@ -17,6 +17,7 @@ export class ManageCookies{
     return (document.cookie=`${name}=/;${cookieOptions}`);
    }
    getcookie(name: string): string | undefined {
+    if (typeof document !== 'undefined') {
       const cookies = document.cookie.split(';');
       for (const cookie of cookies) {
         const [cookieName, cookieValue] = cookie.trim().split('=');
@@ -24,6 +25,7 @@ export class ManageCookies{
           return cookieValue;
         }
       }
-      return undefined;
     }
+    return undefined;
+  }
 }
