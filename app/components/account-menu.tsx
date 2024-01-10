@@ -12,11 +12,11 @@ import { ExitIcon, GearIcon } from "@radix-ui/react-icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth, useUser } from '../hooks';
 import { Loader2 } from "lucide-react";
-
+import {AvatarIcon} from "@radix-ui/react-icons"
 const TextLoader = dynamic(() => import('./textLoader'), { ssr: false })
 export const AccountMenu = () => {
  const {metadata}=useUser();
- const {full_name,avatar_url}=metadata||{full_name:"O",avatar_url:"loading.."};
+ const {full_name,avatar_url}=metadata;
  const {logOut}=useAuth()
   return (
     <Menubar className="bg-black border-none w-full">
@@ -25,11 +25,10 @@ export const AccountMenu = () => {
           <Avatar className="bg-orange-500 text-white">
             <AvatarImage width="20px" height="20px" src={avatar_url} alt="@shadcn" />
             <AvatarFallback className="bg-orange-500 text-white">
-              {/* {!avatar_url?full_name[0]:<Loader2 className="h-4 w-4 animate-spin" />} */}
-             
+                 <AvatarIcon className="w-8 h-8"/>
             </AvatarFallback>
           </Avatar>
-          <p className="text-[16px]">{full_name=='O'?<TextLoader/>:full_name}</p>
+          <p className="text-[16px]">{!full_name?<TextLoader/>:full_name}</p>
         </MenubarTrigger>
         <MenubarContent>
           <MenubarItem></MenubarItem>
