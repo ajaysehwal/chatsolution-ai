@@ -121,4 +121,19 @@ export class ManageChat {
       throw new Error("Unable to get user chat data");
     }
   }
+  async deletechat(chat_id: string) {
+    try {
+      const query = supabase
+        .from("chathistory")
+        .delete()
+        .eq("chat_id", chat_id);
+      await this.executeSupabaseQuery(
+        query,
+        "Error in delete user chat"
+      );
+      return { status: true, response: "User chat delete successfully" };
+    } catch (err) {
+      return { status: false, response: "unable to delete user chat" };
+    }
+  }
 }
