@@ -1,21 +1,21 @@
 "use client";
 import React, { Dispatch, SetStateAction, createContext, useState } from "react";
-interface AuthProviderProps {
+interface AppProviderProps {
   children?: React.ReactNode;
 }
-export interface AuthContextProps {
+export interface AppContextProps {
   setCreateChatEnv?:Dispatch<SetStateAction<boolean>>;
   creatingChatEnv?:boolean;
 }
 
-export const AuthContext = createContext<AuthContextProps | null>(null);
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AppContext = createContext<AppContextProps | null>(null);
+export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   
   const [creatingChatEnv,setCreateChatEnv]=useState<boolean>(false);
 
   return (
-    <AuthContext.Provider value={{creatingChatEnv,setCreateChatEnv}}>
+    <AppContext.Provider value={{creatingChatEnv,setCreateChatEnv}}>
       {children}
-    </AuthContext.Provider>
+    </AppContext.Provider>
   );
 };
