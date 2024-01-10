@@ -3,17 +3,22 @@ import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader2 } from "lucide-react";
 import { useUser } from "../hooks/useUser";
+import { AvatarIcon } from "@radix-ui/react-icons";
 export default function UserMessage({ query }: { query: string }) {
   const { metadata } = useUser();
-  const { full_name, avatar_url }: { full_name: string; avatar_url: string } =
-    metadata || { full_name: "O", avatar_url: "loading.." };
+  const { avatar_url }: { full_name: string; avatar_url: string } = metadata;
   return (
     <>
       <div className="flex items-center justify-start align-middle text-gray-300 gap-3">
-        <Avatar>
-          <AvatarImage src={avatar_url} alt="@shadcn" />
-          <AvatarFallback>
-            {/* {!avatar_url?full_name[0]:<Loader2 className="h-4 w-4 animate-spin" />} */}
+        <Avatar className="bg-orange-500 text-white">
+          <AvatarImage
+            width="20px"
+            height="20px"
+            src={avatar_url}
+            alt="@shadcn"
+          />
+          <AvatarFallback className="bg-orange-500 text-white">
+            <AvatarIcon className="w-8 h-8" />
           </AvatarFallback>
         </Avatar>
         <div>
