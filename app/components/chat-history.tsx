@@ -59,7 +59,7 @@ export default function ChatHistory() {
   };
   useEffect(() => {
     getUserChats(user_id);
-  }, []);
+  }, [user_id, chats.length]);
   return (
     <div className="flex flex-col gap-1 w-full h-[80vh] overflow-y-scroll mt-[10px] items-start pl-2">
       {load ? (
@@ -92,8 +92,8 @@ export default function ChatHistory() {
                       <span
                         className="text-red-500"
                         onClick={() => {
-                          setOpen(true)
-                          setCurrentChatID(el.chat_id)
+                          setOpen(true);
+                          setCurrentChatID(el.chat_id);
                         }}
                       >
                         Delete
