@@ -8,9 +8,6 @@ import { useRouter } from "next/navigation";
 import { ManageCookies, generateCode } from "../libs";
 import { useAuth, useUser } from "../hooks";
 import { useParams } from "next/navigation";
-import { useContext } from "react";
-import { AppContext, AppContextProps } from "../contexts";
-import { Button } from "@/components/ui/button";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
@@ -18,16 +15,14 @@ import { Toaster } from "@/components/ui/toaster";
 interface ChatMessage {
   chat_message: string;
   chat_response: string;
+  isNew: boolean;
 }
 export default function ChatSection() {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const params = useParams<{ token: string }>();
   const { toast } = useToast();
-  const { creatingChatEnv, setCreateChatEnv }: any =
-    useContext<AppContextProps | null>(AppContext);
   const [chatid, setChatid] = useState<string>(params.token);
   const [message, setmessage] = useState<string>("");
-  const [result, setresult] = useState<string>("");
   const [chatdata, setchatdata] = useState<ChatMessage[]>([]);
   const useOpenAi = new OPENAI();
   const router = useRouter();
@@ -40,6 +35,8 @@ export default function ChatSection() {
   const { email }: any = userData;
   const { authdata } = useAuth();
   const { access_token }: any = authdata;
+  const [load, setload] = useState<boolean>(false);
+  const [creatingEnv, setcreatingEnv] = useState<boolean>(false);
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
@@ -48,17 +45,22 @@ export default function ChatSection() {
   };
 
   const handleMessageGenerate = async () => {
-    setCreateChatEnv(true);
+    setload(true);
+    setcreatingEnv(true);
     try {
       const res = await useOpenAi.generateText(message);
       if (res.status) {
-        setresult(res.result);
-
         const newUserMessage = {
           chat_message: message,
           chat_response: res.result,
+          isNew: true,
         };
-        setchatdata((prevChatData) => [...prevChatData, newUserMessage]);
+        setchatdata((prevChatData) => [
+          ...prevChatData.map((msg) => ({ ...msg, isNew: false })),
+          newUserMessage,
+        ]);
+        setload(false);
+
         if (params.token) {
           manageChat.storeChat({
             email: email,
@@ -83,18 +85,26 @@ export default function ChatSection() {
             name: full_name,
           });
           scrollToBottom();
-
           setmessage("");
-          setCreateChatEnv(false);
           setChatid(newtoken);
+          setcreatingEnv(false);
+
           router.push(`/c/${newtoken}`, { scroll: false });
         }
       } else {
+        setcreatingEnv(false);
+
         throw new Error(JSON.stringify(res.result));
       }
     } catch (err) {
-      console.log(err);
+      setcreatingEnv(false);
+
+      setload(false);
       throw new Error(JSON.stringify(err));
+    } finally {
+      setcreatingEnv(false);
+
+      setload(false);
     }
   };
   const getChatData = async (user_id: string | undefined, chatid: string) => {
@@ -113,7 +123,13 @@ export default function ChatSection() {
             router.push("/", { scroll: true });
           }, 3000);
         } else {
-          setchatdata(data);
+          const updatedChats = data.map(
+            (chats: { chat_message: string; chat_response: string }) => ({
+              ...chats,
+              isNew: false,
+            })
+          );
+          setchatdata(updatedChats);
           scrollToBottom();
         }
       } catch (error) {
@@ -128,31 +144,54 @@ export default function ChatSection() {
   }, [chatdata]);
   React.useEffect(() => {
     getChatData(user_id, chatid);
-  }, []);
+  }, [chatid, user_id]);
   return (
     <>
       <Toaster />
-      <div className="flex-1 bg-[rgb(55,55,58)] p-5 h-[100vh]">
+      <div className="flex-1 bg-[rgb(76,76,93)] p-5 h-[100vh]">
         {params.token ? (
           <div
             ref={chatContainerRef}
             id="chatcontainer"
-            className="flex-1 bg-[rgb(55,55,58)] p-5 overflow-y-scroll overflow-x-auto h-[80vh]"
+            className="flex-1 p-5 overflow-y-scroll overflow-x-auto h-[80vh] scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200"
           >
             {chatload ? (
               <div className="loader m-auto"></div>
             ) : (
               chatdata?.map(
-                (el: { chat_message: string; chat_response: string }, i) => (
-                  <div key={i}>
-                    <div
-                      data-aos="zoom-in-up"
-                      className="w-[80%] m-auto bg-gray-500 p-5 rounded-lg mt-5"
+                (el: {
+                  chat_message: string;
+                  chat_response: string;
+                  isNew: boolean;
+                }) => (
+                  <div key={el.chat_message}>
+                    <motion.div
+                      initial="hidden"
+                      animate="visible"
+                      variants={{
+                        hidden: { opacity: 0, y: "100%" },
+                        visible: {
+                          opacity: 1,
+                          y: 0,
+                          transition: { duration: 0.5, ease: "easeInOut" },
+                        },
+                      }}
+                      className="w-[80%] m-auto bg-transparent p-5 rounded-lg mt-5"
                     >
                       <UserMessage query={el.chat_message} />
-                    </div>
+                    </motion.div>
                     <motion.div
-                      className="w-[80%] m-auto bg-gray-300 p-5 rounded-lg mt-5"
+                      initial="hidden"
+                      animate="visible"
+                      variants={{
+                        hidden: { opacity: 0, x: "13%" },
+                        visible: {
+                          opacity: 1,
+                          x: 0,
+                          transition: { duration: 1, ease: "easeInOut" },
+                        },
+                      }}
+                      className="w-[80%] m-auto bg-black text-white p-5 rounded-lg mt-5"
                       style={{
                         boxShadow:
                           "rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset",
@@ -165,10 +204,13 @@ export default function ChatSection() {
               )
             )}
           </div>
+        ) : creatingEnv ? (
+          <CreatingEnvLoading />
         ) : (
           <HowcanIhelp />
         )}
         <MessageInput
+          load={load}
           message={message}
           handleMessageGenerate={handleMessageGenerate}
           setmessage={setmessage}
@@ -198,6 +240,29 @@ const HowcanIhelp = () => {
       </svg>
       <p className="text-white text-[28px] font-semibold">
         How can I help you today?
+      </p>
+    </motion.div>
+  );
+};
+
+const CreatingEnvLoading = () => {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1, transition: { duration: 1, ease: "easeInOut" } }}
+      className="flex flex-col justify-center align-middle  items-center text-center mt-[20%]"
+    >
+      {" "}
+      <div className="spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <p className="text-white text-[28px] font-semibold mt-3">
+        Creating new chat environment...
       </p>
     </motion.div>
   );
