@@ -10,14 +10,14 @@ export default function UserMessage({ query }: { query: string }) {
   return (
     <>
       <div className="flex items-center justify-start align-middle text-gray-300 gap-3">
-        <Avatar className="bg-orange-500 text-white">
+        <Avatar className="bg-pink-600 text-white">
           <AvatarImage
             width="20px"
             height="20px"
             src={avatar_url}
             alt="@shadcn"
           />
-          <AvatarFallback className="bg-orange-500 text-white">
+          <AvatarFallback className="bg-pink-600 text-white">
             <AvatarIcon className="w-8 h-8" />
           </AvatarFallback>
         </Avatar>
