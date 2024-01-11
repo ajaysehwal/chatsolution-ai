@@ -38,6 +38,9 @@ export default function ChatHistory() {
     setload(true);
     try {
       const res = await managechat.getChatHistoryTitles(user_id);
+      if(res.length===0){
+        setload(false);
+      }
       setchats(res);
       setload(false);
     } catch (err) {
