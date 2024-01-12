@@ -7,8 +7,11 @@ import { useAuth } from "../hooks";
 import Authloading from "../components/authloading";
 
 export default function Login() {
-   const { authState, authload,logOut }: { authState: boolean; authload: boolean,logOut:any } =
-    useAuth();
+  const {
+    authState,
+    authload,
+    logOut,
+  }: { authState: boolean; authload: boolean; logOut: any } = useAuth();
   if (authload) {
     return <Authloading />;
   }
@@ -40,14 +43,18 @@ export default function Login() {
           }}
         >
           <h1 className="mb-4 text-xl font-bold text-gray-700 dark:text-gray-300">
-            You're already logged in
+            You&apos;re already logged in
           </h1>
-          <Button
+          <div className='flex gap-2'>
+            <Button variant="default"><Link href={'/'} shallow={true}>Go Back to Home</Link></Button>
+            <Button
             onClick={() => logOut()}
             className="w-full bg-red-600 text-white hover:bg-transparent hover:text-red-500 border-red-500 font-semibold"
           >
             Log out
           </Button>
+          </div>
+         
         </motion.div>
       </div>
     );

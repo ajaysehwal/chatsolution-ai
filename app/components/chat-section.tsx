@@ -144,6 +144,7 @@ export default function ChatSection() {
   }, [chatdata]);
   React.useEffect(() => {
     getChatData(user_id, chatid);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatid, user_id]);
   return (
     <>

@@ -9,10 +9,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogClose,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
 const DeleteDialog = ({
   open,
   setOpen,

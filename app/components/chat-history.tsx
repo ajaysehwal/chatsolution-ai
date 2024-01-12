@@ -62,6 +62,7 @@ export default function ChatHistory() {
   };
   useEffect(() => {
     getUserChats(user_id);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user_id, chats.length]);
   return (
     <div className="flex flex-col gap-1 w-full h-[80vh] overflow-y-scroll mt-[10px] items-start pl-2">

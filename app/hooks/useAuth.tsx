@@ -31,11 +31,10 @@ export const useAuth = () => {
     }
   };
 
-  const router = useRouter();
   const logOut = async () => {
     try {
       await supabase.auth.signOut({ scope: "local" });
-      router.refresh();
+      document.location.reload();
     } catch (error) {
       return JSON.stringify({ error });
     }
@@ -56,6 +55,7 @@ export const useAuth = () => {
 
   useEffect(() => {
     getAuthState();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { authState,authload,logOut,authdata};
