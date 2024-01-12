@@ -22,3 +22,19 @@ CSOL-AI is a Chat AI Test Data Generator built with Next.js and Yarn. This proje
 
 ```bash
 yarn install
+
+### Development Server
+
+```bash
+yarn dev
+
+### Build
+
+```bash
+yarn build
+
+###
+
+# Contributing
+
+Feel free to contribute by submitting bug reports, feature requests, or pull requests. See the CONTRIBUTING.md file for guidelines.
