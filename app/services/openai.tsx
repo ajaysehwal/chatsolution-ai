@@ -40,7 +40,6 @@ export class OPENAI {
         });
   
         const chatCompletion = await stream.finalChatCompletion();
-        console.log("Chat Completion:", chatCompletion);
   
         if (chatCompletion.choices && chatCompletion.choices.length > 0) {
           const aiResponse = chatCompletion.choices[0].message.content;
