@@ -43,7 +43,6 @@ export const useAuth = () => {
   const getAuthState = async () => {
     setAuthLoad(true);
     const session = await readUserSession();
-    console.log(session);
     setAuthLoad(false);
     if (session?.data.session) {
       setAuthData(session?.data.session)
