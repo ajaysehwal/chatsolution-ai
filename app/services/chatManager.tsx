@@ -26,7 +26,6 @@ export class ManageChat {
     if (error) {
       this.handleSupabaseError(error, errorMessage);
     }
-    console.log(data);
 
     return data;
   }
@@ -78,7 +77,6 @@ export class ManageChat {
 
     try {
       const data = await this.selectChatHistory(user_id, chat_id);
-      console.log(data);
       return data;
     } catch (error) {
       console.error("Error fetching chat history:", error);
