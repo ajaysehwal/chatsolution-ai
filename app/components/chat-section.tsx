@@ -74,7 +74,7 @@ export default function ChatSection() {
           scrollToBottom();
           setmessage("");
         } else {
-          const newtoken = generateCode(10);
+          const newtoken = generateCode(15);
           manageChat.storeChat({
             email: email,
             user_id: user_id,
