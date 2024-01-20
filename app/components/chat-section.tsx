@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useRef } from "react";
 import MessageInput from "./message-input";
-import UserMessage from "./user-message";
+import QuerySection from "./query-section";
 import { motion } from "framer-motion";
 import { OPENAI, ManageChat } from "../services";
 import { useRouter } from "next/navigation";
@@ -11,12 +11,14 @@ import { useParams } from "next/navigation";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
-
+import { handleStoreData } from "../utils";
+import ResponseSection from "./response-section";
 interface ChatMessage {
   chat_message: string;
   chat_response: string;
   isNew: boolean;
 }
+
 export default function ChatSection() {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const params = useParams<{ token: string }>();
@@ -37,32 +39,44 @@ export default function ChatSection() {
   const { access_token }: any = authdata;
   const [load, setload] = useState<boolean>(false);
   const [creatingEnv, setcreatingEnv] = useState<boolean>(false);
+  const [chunks, setchunk] = useState<string>("");
+
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
         chatContainerRef.current.scrollHeight;
     }
   };
-
+  const handleChunkData = (res: string) => {
+    setchunk((prev) => prev + res);
+  };
   const handleMessageGenerate = async () => {
+    if (chunks !== "") {
+      setchunk("");
+    }
+
     setload(true);
     setcreatingEnv(true);
+    const newUserMessage = {
+      chat_message: message,
+      chat_response: "",
+      isNew: true,
+    };
+    setchatdata((prevChatData) => [
+      ...prevChatData.map((msg) => ({ ...msg, isNew: false })),
+      newUserMessage,
+    ]);
     try {
-      const res = await useOpenAi.generateText(message);
+      const res = await useOpenAi.generateText(message, handleChunkData);
       if (res.status) {
-        const newUserMessage = {
-          chat_message: message,
-          chat_response: res.result,
-          isNew: true,
-        };
-        setchatdata((prevChatData) => [
-          ...prevChatData.map((msg) => ({ ...msg, isNew: false })),
-          newUserMessage,
-        ]);
         setload(false);
-
         if (params.token) {
-          manageChat.storeChat({
+          setchatdata((prevChatData) => {
+            const updatedData = [...prevChatData];
+            updatedData[updatedData.length - 1].chat_response = res.result;
+            return updatedData;
+          });
+          const chatData = {
             email: email,
             user_id: user_id,
             chat_id: chatid,
@@ -70,12 +84,13 @@ export default function ChatSection() {
             chat_response: res.result,
             access_token: access_token,
             name: full_name,
-          });
+          };
+          handleStoreData(chatData);
           scrollToBottom();
           setmessage("");
         } else {
           const newtoken = generateCode(15);
-          manageChat.storeChat({
+          const newChatData = {
             email: email,
             user_id: user_id,
             chat_id: newtoken,
@@ -83,12 +98,12 @@ export default function ChatSection() {
             chat_response: res.result,
             access_token: access_token,
             name: full_name,
-          });
+          };
+          handleStoreData(newChatData);
           scrollToBottom();
           setmessage("");
           setChatid(newtoken);
           setcreatingEnv(false);
-
           router.push(`/c/${newtoken}`, { scroll: false });
         }
       } else {
@@ -103,7 +118,6 @@ export default function ChatSection() {
       throw new Error(JSON.stringify(err));
     } finally {
       setcreatingEnv(false);
-
       setload(false);
     }
   };
@@ -144,7 +158,7 @@ export default function ChatSection() {
   }, [chatdata]);
   React.useEffect(() => {
     getChatData(user_id, chatid);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatid, user_id]);
   return (
     <>
@@ -160,46 +174,17 @@ export default function ChatSection() {
               <div className="loader m-auto"></div>
             ) : (
               chatdata?.map(
-                (el: {
-                  chat_message: string;
-                  chat_response: string;
-                  isNew: boolean;
-                }) => (
-                  <div key={el.chat_message}>
-                    <motion.div
-                      initial="hidden"
-                      animate="visible"
-                      variants={{
-                        hidden: { opacity: 0, y: "100%" },
-                        visible: {
-                          opacity: 1,
-                          y: 0,
-                          transition: { duration: 0.5, ease: "easeInOut" },
-                        },
-                      }}
-                      className="w-[80%] m-auto bg-transparent p-5 rounded-lg mt-5"
-                    >
-                      <UserMessage query={el.chat_message} />
-                    </motion.div>
-                    <motion.div
-                      initial="hidden"
-                      animate="visible"
-                      variants={{
-                        hidden: { opacity: 0, x: "13%" },
-                        visible: {
-                          opacity: 1,
-                          x: 0,
-                          transition: { duration: 1, ease: "easeInOut" },
-                        },
-                      }}
-                      className="w-[80%] m-auto bg-black text-white p-5 rounded-lg mt-5"
-                      style={{
-                        boxShadow:
-                          "rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset",
-                      }}
-                    >
-                      <p>{el.chat_response}</p>
-                    </motion.div>
+                (
+                  el: {
+                    chat_message: string;
+                    chat_response: string;
+                    isNew: boolean;
+                  },
+                  i
+                ) => (
+                  <div key={i}>
+                   <QuerySection query={el.chat_message} />
+                   <ResponseSection el={el} chunks={chunks}/>
                   </div>
                 )
               )
@@ -213,7 +198,7 @@ export default function ChatSection() {
         <MessageInput
           load={load}
           message={message}
-          handleMessageGenerate={handleMessageGenerate}
+          onSubmit={handleMessageGenerate}
           setmessage={setmessage}
         />
       </div>
