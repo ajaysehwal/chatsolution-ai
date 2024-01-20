@@ -5,19 +5,16 @@ import { ArrowUpIcon } from "@radix-ui/react-icons";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 interface PropsInterface {
-  handleMessageGenerate: () => Promise<void>;
+  onSubmit: () => Promise<void>;
   setmessage: React.Dispatch<React.SetStateAction<string>>;
   message: string;
   load: boolean;
 }
 export default function MessageInput(props: PropsInterface) {
-  const { handleMessageGenerate, setmessage, message, load } = props;
+  const { onSubmit, setmessage, message, load } = props;
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    await handleMessageGenerate();
-    setTimeout(() => {
-      setmessage("");
-    }, 1000);
+    await onSubmit();
   };
   return (
     <motion.div
