@@ -51,7 +51,7 @@ export default function ResponseSection({
         }}
       >
         <p
-          className="p-3"
+          className="p-2"
           ref={textRef as React.RefObject<HTMLParagraphElement>}
         >
           {!el.isNew ? el.chat_response : chunks}
