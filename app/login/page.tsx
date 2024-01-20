@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { SignIn } from "./components";
 import { motion } from "framer-motion";
 import { useAuth } from "../hooks";
-import Authloading from "../components/authloading";
+import Authloading from "../components/loaders/authloading";
 
 export default function Login() {
   const {
