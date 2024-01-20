@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import {SkeletonUI,Main} from "./components";
+import {Main,SkeletonUI} from "./components";
 import {createServerComponentClient} from "@supabase/auth-helpers-nextjs"
 import {cookies} from "next/headers";
 import { redirect } from "next/navigation";
