@@ -37,7 +37,7 @@ export default function ResponseSection({
         initial="hidden"
         animate="visible"
         variants={{
-          hidden: { opacity: 0, x: "13%" },
+          hidden: { opacity: 0, x: "10%" },
           visible: {
             opacity: 1,
             x: 0,
@@ -51,7 +51,7 @@ export default function ResponseSection({
         }}
       >
         <p
-          className="p-2"
+          className="p-1"
           ref={textRef as React.RefObject<HTMLParagraphElement>}
         >
           {!el.isNew ? el.chat_response : chunks}
