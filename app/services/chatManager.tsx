@@ -1,6 +1,6 @@
 import { supabase } from "../libs/supabase";
 
-interface ChatDataProps {
+export interface ChatDataProps {
   email: string;
   user_id: string | undefined;
   chat_id: string;
