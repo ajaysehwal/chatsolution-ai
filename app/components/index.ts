@@ -1,5 +1,5 @@
 "use client";
-export * from "./account-menu";
-export * from "./skeleton-ui";
-export * from "./chat-section";
+export * from "./AccountMenu";
+export * from "./SkeletonUI";
+export * from "./ChatSection";
 export * from "./main";
