@@ -20,6 +20,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { motion } from 'framer-motion';
 
 const Loader = () => {
   return <div className="loader m-auto"></div>;
@@ -64,167 +65,87 @@ export default function ChatHistory() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user_id, chats.length]);
   return (
-    // <div className="flex flex-col gap-1 w-full h-[80vh] overflow-y-scroll mt-[10px] items-start pl-2">
-    //   {load ? (
-    //     <Loader />
-    //   ) : (
-    //     chats.map((el, index) => (
-    //       <div
-    //         key={index}
-    //         className="p-2 flex justify-between text-gray-200 align-center w-full h-[50px] hover:bg-[rgb(32,33,35)] rounded-lg"
-    //         style={{
-    //           cursor: "pointer",
-    //           boxShadow: "5px 0 15px rgba(0, 0, 0, 0.3)",
-    //         }}
-    //       >
-    //         <Dialog open={open}>
-    //           <ContextMenu>
-    //             <ContextMenuTrigger>
-    //               <Link href={`/c/${el.chat_id}`} shallow={true}>
-    //                 <p className="w-[210px] h-[24px] overflow-hidden">
-    //                   {el.chat_message}
-    //                 </p>
-    //               </Link>
-    //             </ContextMenuTrigger>
-    //             <ContextMenuContent>
-    //               <ContextMenuItem>
-    //                 <Link href={`/c/${el.chat_id}`}>View</Link>
-    //               </ContextMenuItem>
-    //               <DialogTrigger asChild>
-    //                 <ContextMenuItem>
-    //                   <span
-    //                     className="text-red-500"
-    //                     onClick={() => {
-    //                       setOpen(true);
-    //                       setCurrentChatID(el.chat_id);
-    //                     }}
-    //                   >
-    //                     Delete
-    //                   </span>
-    //                 </ContextMenuItem>
-    //               </DialogTrigger>
-    //             </ContextMenuContent>
-    //           </ContextMenu>
-    //           <DialogContent>
-    //             <DialogHeader>
-    //               <DialogTitle>Are you absolutely sure?</DialogTitle>
-    //               <DialogDescription>
-    //                 This action cannot be undone. Are you sure you want to
-    //                 permanently delete this chat from our servers?
-    //               </DialogDescription>
-    //             </DialogHeader>
-    //             <DialogFooter>
-    //               <DialogClose asChild>
-    //                 <Button
-    //                   onClick={() => setOpen(false)}
-    //                   type="button"
-    //                   variant="secondary"
-    //                 >
-    //                   cancel
-    //                 </Button>
-    //               </DialogClose>
-    //               <Button
-    //                 disabled={deleteload}
-    //                 onClick={() => deletechat(currentChatID)}
-    //                 type="submit"
-    //                 variant="destructive"
-    //               >
-    //                 {deleteload ? (
-    //                   <div className="flex">
-    //                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-    //                     Deleting
-    //                   </div>
-    //                 ) : (
-    //                   "confirm"
-    //                 )}
-    //               </Button>
-    //             </DialogFooter>
-    //           </DialogContent>
-    //         </Dialog>
-    //       </div>
-    //     ))
-    //   )}
-    // </div>
-
     <>
       {load ? (
         <Loader />
       ) : (
         chats.map((el, index) => (
-          <li key={index}>
+          <motion.li 
+           initial={{ opacity: 0 }}
+           animate={{ opacity: 1, transition: { duration: 1, ease: "easeInOut" } }}
+           key={index}>
             <a
               className="flex items-center gap-x-3 py-2 px-3 text-sm text-slate-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 dark:text-slate-400 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-              href="#"
+              href={`/c/${el.chat_id}`}
             >
-            <Dialog open={open}>
-              <ContextMenu>
-                <ContextMenuTrigger>
-                  <Link href={`/c/${el.chat_id}`} shallow={true}>
-                    <p className="w-[210px] h-[24px] overflow-hidden">
-                      {el.chat_message}
-                    </p>
-                  </Link>
-                </ContextMenuTrigger>
-                <ContextMenuContent>
-                  <ContextMenuItem>
-                    <Link href={`/c/${el.chat_id}`}>View</Link>
-                  </ContextMenuItem>
-                  <DialogTrigger asChild>
+              <Dialog open={open}>
+                <ContextMenu>
+                  <ContextMenuTrigger>
+                    <Link href={`/c/${el.chat_id}`} shallow={true}>
+                      <p className="w-[210px] h-[24px] overflow-hidden">
+                        {el.chat_message}
+                      </p>
+                    </Link>
+                  </ContextMenuTrigger>
+                  <ContextMenuContent>
                     <ContextMenuItem>
-                      <span
-                        className="text-red-500"
-                        onClick={() => {
-                          setOpen(true);
-                          setCurrentChatID(el.chat_id);
-                        }}
-                      >
-                        Delete
-                      </span>
+                      <Link href={`/c/${el.chat_id}`}>View</Link>
                     </ContextMenuItem>
-                  </DialogTrigger>
-                </ContextMenuContent>
-              </ContextMenu>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Are you absolutely sure?</DialogTitle>
-                  <DialogDescription>
-                    This action cannot be undone. Are you sure you want to
-                    permanently delete this chat from our servers?
-                  </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                  <DialogClose asChild>
+                    <DialogTrigger asChild>
+                      <ContextMenuItem>
+                        <span
+                          className="text-red-500"
+                          onClick={() => {
+                            setOpen(true);
+                            setCurrentChatID(el.chat_id);
+                          }}
+                        >
+                          Delete
+                        </span>
+                      </ContextMenuItem>
+                    </DialogTrigger>
+                  </ContextMenuContent>
+                </ContextMenu>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Are you absolutely sure?</DialogTitle>
+                    <DialogDescription>
+                      This action cannot be undone. Are you sure you want to
+                      permanently delete this chat from our servers?
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter>
+                    <DialogClose asChild>
+                      <Button
+                        onClick={() => setOpen(false)}
+                        type="button"
+                        variant="secondary"
+                      >
+                        cancel
+                      </Button>
+                    </DialogClose>
                     <Button
-                      onClick={() => setOpen(false)}
-                      type="button"
-                      variant="secondary"
+                      disabled={deleteload}
+                      onClick={() => deletechat(currentChatID)}
+                      type="submit"
+                      variant="destructive"
                     >
-                      cancel
+                      {deleteload ? (
+                        <div className="flex">
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Deleting
+                        </div>
+                      ) : (
+                        "confirm"
+                      )}
                     </Button>
-                  </DialogClose>
-                  <Button
-                    disabled={deleteload}
-                    onClick={() => deletechat(currentChatID)}
-                    type="submit"
-                    variant="destructive"
-                  >
-                    {deleteload ? (
-                      <div className="flex">
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Deleting
-                      </div>
-                    ) : (
-                      "confirm"
-                    )}
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </a>
-          </li>
+          </motion.li>
         ))
-      )
-}
-   </>
+      )}
+    </>
   );
 }
