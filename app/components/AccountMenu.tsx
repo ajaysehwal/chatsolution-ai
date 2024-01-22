@@ -35,7 +35,7 @@ const SettingDialog = ({
 }) => {
   return (
     <Dialog open={open}>
-      <DialogContent className="sm:max-w-[500px] w-[600px]  sm:max-h-[300px] lg:w-[700px] lg:h-[500px] bg-black text-white border-none">
+      <DialogContent className="sm:max-w-[500px] w-[600px]  sm:max-h-[300px] lg:w-[700px] lg:h-[500px] bg-white text-slate-500 border-none">
         <DialogHeader>
           <DialogTitle>General Settings</DialogTitle>
         </DialogHeader>
@@ -59,7 +59,8 @@ export const AccountMenu = () => {
   return (
     <>
       <SettingDialog open={open} setOpen={setOpen} />
-      <Menubar className="bg-black border-none w-full">
+      <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+      <Menubar>
         <MenubarMenu>
           <MenubarTrigger className="flex align-center items-center  gap-3 w-full">
             <motion.div
@@ -71,13 +72,13 @@ export const AccountMenu = () => {
             >
               <Avatar className="bg-pink-600 text-white">
                 <AvatarImage
-                  width="20px"
-                  height="20px"
+                  width="17px"
+                  height="17px"
                   src={avatar_url}
                   alt="@shadcn"
                 />
                 <AvatarFallback className="bg-pink-600 text-white">
-                  <AvatarIcon className="w-8 h-8" />
+                  You
                 </AvatarFallback>
               </Avatar>
             </motion.div>
@@ -99,6 +100,7 @@ export const AccountMenu = () => {
           </MenubarContent>
         </MenubarMenu>
       </Menubar>
+      </div>
     </>
   );
 };
