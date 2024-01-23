@@ -13,11 +13,10 @@ export default async function ChatPage() {
    }
   return (
     <>
-     <main>
-      <Suspense fallback={<SkeletonUI />}>
+     <Suspense fallback={<SkeletonUI />}>
          <Main />
       </Suspense>
-    </main>
+   
     </>
   )
 }
