@@ -3,8 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { AppProvider } from "./contexts";
 const inter = Inter({ subsets: ["latin"] });
-import PrelineScript from "./components/PrelineScript";
-import Script from "next/script";
 export const metadata: Metadata = {
   title: "CSOL-AI",
   description:
@@ -21,10 +19,8 @@ export default function RootLayout({
       <body className={inter.className}>
         <AppProvider>
           {children}
-          <PrelineScript />
         </AppProvider>
       </body>
-      <Script src="../node_modules/preline/dist/preline.js"></Script>
     </html>
   );
 }
