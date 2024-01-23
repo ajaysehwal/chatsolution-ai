@@ -20,7 +20,6 @@ import { ExitIcon, GearIcon } from "@radix-ui/react-icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth, useUser } from "../hooks";
 import { useState } from "react";
-import { AvatarIcon } from "@radix-ui/react-icons";
 import { motion } from "framer-motion";
 import Setting from "./setting";
 const TextLoader = dynamic(() => import("./loaders/textloader"), {
