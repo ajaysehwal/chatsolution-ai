@@ -11,6 +11,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Loader2 } from "lucide-react";
+import { ManageCookies } from "../libs";
 const DeleteDialog = ({
   open,
   setOpen,
@@ -22,9 +23,13 @@ const DeleteDialog = ({
 }) => {
   const [load, setload] = React.useState<boolean>(false);
   const managechat = new ManageChat();
+  const cookies = new ManageCookies();
+
+  const user_id = cookies.getcookie("Secure_S_UID_");
+
   const deleting = async () => {
     setload(true);
-    const res = await managechat.deleteallchat();
+    const res = await managechat.deleteallchat(user_id);
     if (res.status) {
       setOpen(false);
       SettingDialog(false);
