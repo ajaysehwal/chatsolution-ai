@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect } from "react";
 import { ManageChat } from "../services";
 import { ManageCookies } from "../libs";
@@ -35,18 +36,12 @@ export default function ChatHistory() {
   const user_id = cookies.getcookie("Secure_S_UID_");
   const [deleteload, setdeleteload] = React.useState<boolean>(false);
   const getUserChats = async (user_id: string | undefined) => {
-    setload(true);
-    try {
-      const res = await managechat.getChatHistoryTitles(user_id);
+     const res = await managechat.getChatHistoryTitles(user_id,setload);
       if (res.length === 0) {
         setload(false);
       }
       setchats(res);
       setload(false);
-    } catch (err) {
-      setload(false);
-      throw err;
-    }
   };
   const deletechat = async (chat_id: string) => {
     setdeleteload(true);
@@ -64,8 +59,11 @@ export default function ChatHistory() {
     getUserChats(user_id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user_id, chats.length]);
+  if(load){
+    return 
+  }
   return (
-    <>
+    <ul className="space-y-1.5 p-4">
       {load ? (
         <Loader />
       ) : (
@@ -74,9 +72,9 @@ export default function ChatHistory() {
            initial={{ opacity: 0 }}
            animate={{ opacity: 1, transition: { duration: 1, ease: "easeInOut" } }}
            key={index}>
-            <a
+            <div
               className="flex items-center gap-x-3 py-2 px-3 text-sm text-slate-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 dark:text-slate-400 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-              href={`/c/${el.chat_id}`}
+           
             >
               <Dialog open={open}>
                 <ContextMenu>
@@ -142,10 +140,10 @@ export default function ChatHistory() {
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
-            </a>
+            </div>
           </motion.li>
         ))
       )}
-    </>
+    </ul>
   );
 }

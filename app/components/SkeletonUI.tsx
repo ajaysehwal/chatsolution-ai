@@ -5,7 +5,7 @@ import React from "react";
 export function SkeletonUI() {
   return (
     <>
-      <div className="flex flex-col w-[100%] m-auto lg:flex-row h-[100vh] align-middle gap-3 bg-[rgb(60,60,71)]">
+      <div className="flex flex-col w-[100%] m-auto lg:flex-row h-[100vh] align-middle gap-3 bg-[rgb(255,255,255)]">
         <div className="lg:w-1/6 hidden lg:flex md:hidden sm:hidden w-1/6 h-[100vh] m-auto pt-[22px] flex-col gap-3 px-3">
           <Skeleton className="w-full h-[40px]  bg-gray-400" />
           <div className="flex flex-col  gap-3">

@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
-const CreatingEnvLoading = () => {
+import React from "react";
+
+const CreatingEnvLoading = ():React.ReactNode => {
     return (
       <motion.div
         initial={{ opacity: 0 }}

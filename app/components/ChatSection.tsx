@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import MessageInput from "./MessageInput";
 import QuerySection from "./QuerySection";
 import { motion } from "framer-motion";
@@ -13,6 +13,8 @@ import { useToast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { handleStoreData } from "../utils";
 import ResponseSection from "./ResponseSection";
+import dynamic from "next/dynamic";
+const CreatingEnvLoading=dynamic(()=>import('./loaders/createEnv'),{ssr:false})
 interface ChatMessage {
   chat_message: string;
   chat_response: string;
@@ -40,8 +42,9 @@ export default function ChatSection() {
   const [creatingEnv, setcreatingEnv] = useState<boolean>(false);
   const [chunks, setchunk] = useState<string>("");
   const { handleScroll } = UseScroller();
-  const bottom = document.body.scrollHeight;
   const ScrollDuration:number=3000;
+
+  
   const handleChunkData = (res: string) => {
     setchunk((prev) => prev + res);
   };
@@ -81,7 +84,7 @@ export default function ChatSection() {
           };
           handleStoreData(chatData);
 
-          handleScroll(bottom,ScrollDuration);
+          handleScroll(document.body.scrollHeight,ScrollDuration);
           setmessage("");
         } else {
           const newtoken = generateCode(15);
@@ -95,7 +98,7 @@ export default function ChatSection() {
             name: full_name,
           };
           handleStoreData(newChatData);
-          handleScroll(bottom,ScrollDuration);
+          handleScroll(document.body.scrollHeight,ScrollDuration);
 
           setmessage("");
           setChatid(newtoken);
@@ -120,8 +123,9 @@ export default function ChatSection() {
   const getChatData = async (user_id: string | undefined, chatid: string) => {
     if (params.token) {
       setchatload(true);
-      try {
         const data: any = await manageChat.getChatHistory(user_id, chatid);
+        setchatload(false);
+
         if (data.length === 0) {
           toast({
             variant: "destructive",
@@ -132,6 +136,7 @@ export default function ChatSection() {
           setTimeout(() => {
             router.push("/", { scroll: true });
           }, 3000);
+
         } else {
           const updatedChats = data.map(
             (chats: { chat_message: string; chat_response: string }) => ({
@@ -140,26 +145,19 @@ export default function ChatSection() {
             })
           );
           setchatdata(updatedChats);
-          handleScroll(bottom,ScrollDuration);
         }
-      } catch (error) {
-        console.error("Error fetching chat data:", error);
-      } finally {
-        setchatload(false);
-      }
     }
   };
   React.useEffect(() => {
-    handleScroll(bottom,ScrollDuration);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chatdata]);
+    handleScroll(document.body.scrollHeight,ScrollDuration);
+  }, [chatdata, handleScroll]);
 
   React.useEffect(() => {
     getChatData(user_id, chatid);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatid, user_id]);
   return (
-    <>
+    <div>
       <Toaster />
       {params.token ? (
         <div>
@@ -194,7 +192,7 @@ export default function ChatSection() {
         onSubmit={handleMessageGenerate}
         setmessage={setmessage}
       />
-    </>
+    </div>
   );
 }
 
@@ -208,28 +206,5 @@ const HowcanIhelp = () => {
         Your AI-powered copilot for the web
       </p>
     </div>
-  );
-};
-
-const CreatingEnvLoading = () => {
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1, transition: { duration: 1, ease: "easeInOut" } }}
-      className="flex flex-col justify-center align-middle  items-center text-center mt-[20%]"
-    >
-      {" "}
-      <div className="spinner">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
-      <p className="text-gray-800 text-[28px] font-semibold mt-3">
-        Creating new chat environment...
-      </p>
-    </motion.div>
   );
 };

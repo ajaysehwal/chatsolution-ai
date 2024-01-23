@@ -1,6 +1,6 @@
 import React from "react";
 import ChatHistory from "./ChatHistory";
-import { AccountMenu } from ".";
+import { AccountMenu } from "./AccountMenu";
 export default function Sidebar() {
   return (
     <>
@@ -17,9 +17,7 @@ export default function Sidebar() {
           </div>
 
           <div className="h-full overflow-y-scroll">
-            <ul className="space-y-1.5 p-4">
               <ChatHistory />
-            </ul>
           </div>
 
           <div className="mt-auto">
