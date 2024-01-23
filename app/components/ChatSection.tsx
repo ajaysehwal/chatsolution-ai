@@ -42,7 +42,7 @@ export default function ChatSection() {
   const [creatingEnv, setcreatingEnv] = useState<boolean>(false);
   const [chunks, setchunk] = useState<string>("");
   const { handleScroll } = UseScroller();
-  const ScrollDuration:number=3000;
+  const ScrollDuration:number=1000;
 
   
   const handleChunkData = (res: string) => {
