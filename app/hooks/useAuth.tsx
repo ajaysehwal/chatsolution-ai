@@ -1,7 +1,6 @@
 "use client";
 import { supabase } from "../libs/supabase";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 
 interface AuthInterface {
   access_token: string;
