@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { ManageChat } from "../services";
-import { ManageCookies } from "../libs";
+import { ManageChat,ManageCookies } from "../services";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import {
