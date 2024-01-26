@@ -2,6 +2,7 @@
 import React from "react";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useSpeechRecognition } from "../hooks";
 interface PropsInterface {
   onSubmit: () => Promise<void>;
   setmessage: React.Dispatch<React.SetStateAction<string>>;
@@ -10,6 +11,8 @@ interface PropsInterface {
 }
 export default function MessageInput(props: PropsInterface) {
   const { onSubmit, setmessage, message, load } = props;
+  const {startListening,transcript}=useSpeechRecognition();
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     await onSubmit();
@@ -62,7 +65,7 @@ export default function MessageInput(props: PropsInterface) {
         </div>
         <form onSubmit={handleSubmit}>
           <textarea
-            value={message}
+            value={message||transcript}
             onChange={(e) => setmessage(e.target.value)}
             className="p-4 pb-12 block w-full bg-gray-100 border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-800 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
             placeholder="Ask me anything..."
@@ -114,6 +117,7 @@ export default function MessageInput(props: PropsInterface) {
 
               <div className="flex items-center gap-x-1">
                 <button
+                  onClick={()=>startListening()}
                   type="button"
                   className="inline-flex flex-shrink-0 justify-center items-center h-8 w-8 rounded-lg text-gray-500 hover:text-blue-600 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:hover:text-blue-500 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                 >

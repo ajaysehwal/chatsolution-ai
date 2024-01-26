@@ -1,11 +1,10 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import MessageInput from "./MessageInput";
 import QuerySection from "./QuerySection";
-import { motion } from "framer-motion";
 import { OPENAI, ManageChat } from "../services";
 import { useRouter } from "next/navigation";
-import { ManageCookies, generateCode } from "../libs";
+import { generateCode } from "../libs";
 import { UseScroller, useAuth, useUser } from "../hooks";
 import { useParams } from "next/navigation";
 import { ToastAction } from "@/components/ui/toast";
@@ -14,6 +13,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { handleStoreData } from "../utils";
 import ResponseSection from "./ResponseSection";
 import dynamic from "next/dynamic";
+import {ManageCookies} from "../services";
 const CreatingEnvLoading=dynamic(()=>import('./loaders/createEnv'),{ssr:false})
 interface ChatMessage {
   chat_message: string;
@@ -42,8 +42,6 @@ export default function ChatSection() {
   const [creatingEnv, setcreatingEnv] = useState<boolean>(false);
   const [chunks, setchunk] = useState<string>("");
   const { handleScroll } = UseScroller();
-  const ScrollDuration:number=1000;
-
   
   const handleChunkData = (res: string) => {
     setchunk((prev) => prev + res);
@@ -84,7 +82,7 @@ export default function ChatSection() {
           };
           handleStoreData(chatData);
 
-          handleScroll(document.body.scrollHeight,ScrollDuration);
+          handleScroll(document.body.scrollHeight);
           setmessage("");
         } else {
           const newtoken = generateCode(15);
@@ -98,8 +96,6 @@ export default function ChatSection() {
             name: full_name,
           };
           handleStoreData(newChatData);
-          handleScroll(document.body.scrollHeight,ScrollDuration);
-
           setmessage("");
           setChatid(newtoken);
           setcreatingEnv(false);
@@ -149,8 +145,9 @@ export default function ChatSection() {
     }
   };
   React.useEffect(() => {
-    handleScroll(document.body.scrollHeight,ScrollDuration);
-  }, [chatdata, handleScroll]);
+    handleScroll(document.body.scrollHeight);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chatdata]);
 
   React.useEffect(() => {
     getChatData(user_id, chatid);

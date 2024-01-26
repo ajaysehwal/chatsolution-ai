@@ -11,7 +11,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Loader2 } from "lucide-react";
-import { ManageCookies } from "../libs";
+import { ManageCookies } from "../services";
 const DeleteDialog = ({
   open,
   setOpen,

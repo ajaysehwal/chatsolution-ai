@@ -17,7 +17,7 @@ const CreatingEnvLoading = ():React.ReactNode => {
           <div></div>
           <div></div>
         </div>
-        <p className="text-white text-[28px] font-semibold mt-3">
+        <p className="text-gray-700 text-[28px] font-semibold mt-3">
           Creating new chat environment...
         </p>
       </motion.div>
