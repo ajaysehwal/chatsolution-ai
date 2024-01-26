@@ -6,12 +6,10 @@ import { Icons } from "../../components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { GoogleAuth } from "../../services";
-import { Login } from "../../services";
+import { GoogleAuth,Login,ManageCookies } from "../../services";
 import { useToast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { supabase } from "../../libs/supabase";
-import { ManageCookies } from "@/app/libs";
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 export function SignIn({ className, ...props }: UserAuthFormProps) {
   const { toast } = useToast();
