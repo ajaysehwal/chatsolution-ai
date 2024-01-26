@@ -1,5 +1,5 @@
 import { supabase } from "../libs/supabase";
-
+import React from "react";
 export interface ChatDataProps {
   email: string;
   user_id: string | undefined;
@@ -84,8 +84,13 @@ export class ManageChat {
     }
   }
 
-  async getChatHistoryTitles(user_id: string | undefined) {
+  async getChatHistoryTitles(
+    user_id: string | undefined,
+    fetchload: React.Dispatch<React.SetStateAction<boolean>>
+  ) {
+
     this.checkUserId(user_id, "user_id is not defined");
+    fetchload(true);
     try {
       const query = supabase
         .from(ManageChat.CHAT_HISTORY_TABLE)
@@ -114,8 +119,11 @@ export class ManageChat {
       );
 
       const result = Array.from(FirstChatsChatMessage.values());
+      fetchload(false);
       return result;
     } catch (error) {
+      fetchload(false);
+
       throw new Error("Unable to get user chat data");
     }
   }
@@ -131,9 +139,14 @@ export class ManageChat {
       return { status: false, response: "unable to delete user chat" };
     }
   }
-  async deleteallchat(){
+  async deleteallchat(user_id: string | undefined) {
+    this.checkUserId(user_id, "user_id is not defined");
+
     try {
-      const query = supabase.from("chathistory").delete().neq("chat_id",0);
+      const query = supabase
+        .from("chathistory")
+        .delete()
+        .eq("user_id", user_id);
       await this.executeSupabaseQuery(
         query,
         "Error in deleting all table of chats"
