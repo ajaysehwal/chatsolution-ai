@@ -21,7 +21,7 @@ type ButtonLayoutType = {
   onClick?: () => void;
   styles?: string;
   icon?: React.ReactNode;
-  props?:any
+  props?: any;
 };
 const ButtonLayout = ({
   name,
@@ -52,7 +52,6 @@ const ButtonLayout = ({
 };
 export const CopyButton = ({ onClick }: ButtonOnClickType) => {
   const [isCopied, setIsCopied] = useState(false);
-
   const handleCopyClick = () => {
     onClick();
     setIsCopied(true);
@@ -61,31 +60,20 @@ export const CopyButton = ({ onClick }: ButtonOnClickType) => {
       setIsCopied(false);
     }, 2000);
   };
-const iconToggle: React.ReactNode = !isCopied ? (
-    <TbClipboardCopy className="w-5 h-6" />
+  const iconToggle: React.ReactNode = !isCopied ? (
+    <TbClipboardCopy className="w-6 h-6" />
   ) : (
-    <TbClipboardCheck className="w-5 h-6" />
+    <TbClipboardCheck className="w-6 h-6" />
   );
   const Styles =
     "py-2 px-3 inline-flex items-center gap-x-2 text-sm rounded-full border border-transparent text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600";
   return (
-    <TooltipProvider>
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Button
-          variant="ghost"
-          onClick={handleCopyClick}
-          className={Styles}
-         
-        >
-          {iconToggle}
-        </Button>
-      </TooltipTrigger>
-      <TooltipContent className="bg-gray-700 text-white">
-        <p>{isCopied ? "copied" : "copy"}</p>
-      </TooltipContent>
-    </Tooltip>
-  </TooltipProvider>
+    <ButtonLayout
+      icon={iconToggle}
+      name={isCopied ? "copied" : "copy"}
+      onClick={handleCopyClick}
+      styles={Styles}
+    />
   );
 };
 
@@ -94,7 +82,7 @@ export const ShareButton = ({ onClick }: ButtonOnClickType) => {
     "py-2 px-3 inline-flex items-center gap-x-2 text-sm rounded-full border border-transparent text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600";
   return (
     <ButtonLayout
-      icon={<IoShareSocialOutline className="w-5 h-6" />}
+      icon={<IoShareSocialOutline className="w-6 h-6" />}
       name="share"
       onClick={onClick}
       styles={Styles}
