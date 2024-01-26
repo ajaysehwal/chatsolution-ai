@@ -58,47 +58,48 @@ export const AccountMenu = () => {
   return (
     <>
       <SettingDialog open={open} setOpen={setOpen} />
-      <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-      <Menubar>
-        <MenubarMenu>
-          <MenubarTrigger className="flex align-center items-center  gap-3 w-full">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{
-                opacity: 1,
-                transition: { duration: 1, ease: "easeInOut" },
-              }}
-            >
-              <Avatar className="bg-pink-600 text-white">
-                <AvatarImage
-                  width="17px"
-                  height="17px"
-                  src={avatar_url}
-                  alt="@shadcn"
-                />
-                <AvatarFallback className="bg-pink-600 text-white">
-                  You
-                </AvatarFallback>
-              </Avatar>
-            </motion.div>
-
-            <p className="text-[16px]">
-              {!full_name ? <TextLoader /> : full_name}
-            </p>
-          </MenubarTrigger>
-          <MenubarContent>
-            <MenubarItem onClick={() => setOpen(true)}>
-              <GearIcon className="mr-2" />
-              Settings{" "}
-            </MenubarItem>
-            <MenubarSeparator />
-            <MenubarItem onClick={() => logOut()}>
-              <ExitIcon className="mr-2" />
-              Logout
-            </MenubarItem>
-          </MenubarContent>
-        </MenubarMenu>
-      </Menubar>
+      <div className="p-4 border-t">
+        <Menubar>
+          <MenubarMenu>
+            <MenubarTrigger className="flex align-center items-center  gap-3 w-full  border-gray-200 dark:border-gray-700">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{
+                  opacity: 1,
+                  transition: { duration: 1, ease: "easeInOut" },
+                }}
+              >
+                <Avatar className="bg-pink-600 text-white">
+                  <AvatarImage
+                    width="17px"
+                    height="17px"
+                    src={avatar_url}
+                    alt="@shadcn"
+                  />
+                  <AvatarFallback className="bg-pink-600 text-white">
+                    You
+                  </AvatarFallback>
+                </Avatar>
+              </motion.div>
+              {!full_name ? (
+                <TextLoader />
+              ) : (
+                <p className="text-[16px]">{full_name}</p>
+              )}
+            </MenubarTrigger>
+            <MenubarContent>
+              <MenubarItem onClick={() => setOpen(true)}>
+                <GearIcon className="mr-2" />
+                Settings{" "}
+              </MenubarItem>
+              <MenubarSeparator />
+              <MenubarItem onClick={() => logOut()}>
+                <ExitIcon className="mr-2" />
+                Logout
+              </MenubarItem>
+            </MenubarContent>
+          </MenubarMenu>
+        </Menubar>
       </div>
     </>
   );
