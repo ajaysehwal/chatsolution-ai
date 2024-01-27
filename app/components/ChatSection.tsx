@@ -13,8 +13,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { handleStoreData } from "../utils";
 import ResponseSection from "./ResponseSection";
 import dynamic from "next/dynamic";
-import {ManageCookies} from "../services";
-const CreatingEnvLoading=dynamic(()=>import('./loaders/createEnv'),{ssr:false})
+import { ManageCookies } from "../services";
+const CreatingEnvLoading = dynamic(() => import("./loaders/createEnv"), {
+  ssr: false,
+});
 interface ChatMessage {
   chat_message: string;
   chat_response: string;
@@ -39,19 +41,17 @@ export default function ChatSection() {
   const { authdata } = useAuth();
   const { access_token }: any = authdata;
   const [load, setload] = useState<boolean>(false);
-  const [creatingEnv, setcreatingEnv] = useState<boolean>(false);
   const [chunks, setchunk] = useState<string>("");
   const { handleScroll } = UseScroller();
-  
+
   const handleChunkData = (res: string) => {
     setchunk((prev) => prev + res);
   };
   const handleMessageGenerate = async () => {
+    setload(true);
     if (chunks !== "") {
       setchunk("");
     }
-    setload(true);
-    setcreatingEnv(true);
     const newUserMessage = {
       chat_message: message,
       chat_response: "",
@@ -81,7 +81,6 @@ export default function ChatSection() {
             name: full_name,
           };
           handleStoreData(chatData);
-
           handleScroll(document.body.scrollHeight);
           setmessage("");
         } else {
@@ -98,55 +97,58 @@ export default function ChatSection() {
           handleStoreData(newChatData);
           setmessage("");
           setChatid(newtoken);
-          setcreatingEnv(false);
           router.push(`/c/${newtoken}`, { scroll: false });
         }
       } else {
-        setcreatingEnv(false);
-
-        throw new Error(JSON.stringify(res.result));
+        toast({
+          variant: "destructive",
+          title: "Open AI API Error",
+          description: JSON.stringify(res.result),
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        });
       }
     } catch (err) {
-      setcreatingEnv(false);
-
       setload(false);
-      throw new Error(JSON.stringify(err));
+      toast({
+        variant: "destructive",
+        title: "Open AI API Error",
+        description: JSON.stringify(err),
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
     } finally {
-      setcreatingEnv(false);
       setload(false);
     }
   };
   const getChatData = async (user_id: string | undefined, chatid: string) => {
     if (params.token) {
       setchatload(true);
-        const data: any = await manageChat.getChatHistory(user_id, chatid);
-        setchatload(false);
+      const data: any = await manageChat.getChatHistory(user_id, chatid);
+      setchatload(false);
 
-        if (data.length === 0) {
-          toast({
-            variant: "destructive",
-            title: "Unauthorized chat token",
-            description: "There was a problem with your request.",
-            action: <ToastAction altText="Try again">Try again</ToastAction>,
-          });
-          setTimeout(() => {
-            router.push("/", { scroll: true });
-          }, 3000);
-
-        } else {
-          const updatedChats = data.map(
-            (chats: { chat_message: string; chat_response: string }) => ({
-              ...chats,
-              isNew: false,
-            })
-          );
-          setchatdata(updatedChats);
-        }
+      if (data.length === 0) {
+        toast({
+          variant: "destructive",
+          title: "Unauthorized chat token",
+          description: "There was a problem with your request.",
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        });
+        setTimeout(() => {
+          router.push("/", { scroll: true });
+        }, 3000);
+      } else {
+        const updatedChats = data.map(
+          (chats: { chat_message: string; chat_response: string }) => ({
+            ...chats,
+            isNew: false,
+          }),
+        );
+        setchatdata(updatedChats);
+      }
     }
   };
   React.useEffect(() => {
     handleScroll(document.body.scrollHeight);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatdata]);
 
   React.useEffect(() => {
@@ -168,17 +170,17 @@ export default function ChatSection() {
                   chat_response: string;
                   isNew: boolean;
                 },
-                i
+                i,
               ) => (
                 <ul key={i} className="mt-16 space-y-5">
                   <QuerySection query={el.chat_message} />
                   <ResponseSection el={el} chunks={chunks} />
                 </ul>
-              )
+              ),
             )
           )}
         </div>
-      ) : creatingEnv ? (
+      ) : load ? (
         <CreatingEnvLoading />
       ) : (
         <HowcanIhelp />
