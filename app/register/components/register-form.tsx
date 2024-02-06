@@ -148,7 +148,7 @@ async function onSubmit(event: React.SyntheticEvent) {
               </span>
             </div>
           </div>
-          <GoogleAuth />
+{/*           <GoogleAuth /> */}
         </div>
       )}
     </>
