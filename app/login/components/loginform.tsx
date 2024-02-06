@@ -115,7 +115,7 @@ export function SignIn({ className, ...props }: UserAuthFormProps) {
             </span>
           </div>
         </div>
-        <GoogleAuth />
+{/*         <GoogleAuth /> */}
       </div>
     </>
   );
