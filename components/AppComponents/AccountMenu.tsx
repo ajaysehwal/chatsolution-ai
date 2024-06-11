@@ -18,7 +18,7 @@ import {
 import dynamic from "next/dynamic";
 import { ExitIcon, GearIcon } from "@radix-ui/react-icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useAuth, useUser } from "../hooks";
+import { useAuth, useUser } from "../../hooks";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Setting from "./setting";
@@ -59,9 +59,9 @@ export const AccountMenu = () => {
     <>
       <SettingDialog open={open} setOpen={setOpen} />
       <div className="p-4 border-t">
-        <Menubar>
+        <Menubar  className="p-3 bg-gradient-to-r from-violet-200 to-blue-500">
           <MenubarMenu>
-            <MenubarTrigger className="flex align-center items-center  gap-3 w-full  border-gray-200 dark:border-gray-700">
+            <MenubarTrigger className="flex align-center items-center  gap-3 w-full  border-blue-200 dark:border-gray-700">
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{

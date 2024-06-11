@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { AppProvider } from "./contexts";
+import { AppProvider } from "../contexts";
 const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
-  title: "CSOL-AI",
+  title: "COS AI",
   description:
     "Experience the future of seamless, intelligent communication with our AI-powered chat solution",
 };

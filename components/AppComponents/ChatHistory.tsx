@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { ManageChat,ManageCookies } from "../services";
+import { ManageChat, ManageCookies } from "../../services";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import {
@@ -20,10 +20,16 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
 const Loader = () => {
-  return <div className="loader m-auto"></div>;
+  return (
+    <>
+      <div className="animate-pulse rounded-lg py-4 px-3 bg-gradient-to-r from-violet-300 to-blue-600 m-auto"></div>
+      <div className="animate-pulse rounded-lg py-4 px-3 bg-gradient-to-r from-violet-300 to-blue-600 m-auto"></div>
+      <div className="animate-pulse rounded-lg py-4 px-3 bg-gradient-to-r from-violet-300 to-blue-600 m-auto"></div>
+    </>
+  );
 };
 export default function ChatHistory() {
   const managechat = new ManageChat();
@@ -31,16 +37,20 @@ export default function ChatHistory() {
   const [open, setOpen] = React.useState<boolean>(false);
   const [chats, setchats] = React.useState<any[]>([]);
   const [currentChatID, setCurrentChatID] = React.useState<string>("");
+  const [intialLoad, setintialLoad] = React.useState<boolean>(true);
   const [load, setload] = React.useState<boolean>(false);
   const user_id = cookies.getcookie("Secure_S_UID_");
   const [deleteload, setdeleteload] = React.useState<boolean>(false);
+  useEffect(() => {
+    setintialLoad(false);
+  }, []);
   const getUserChats = async (user_id: string | undefined) => {
-     const res = await managechat.getChatHistoryTitles(user_id,setload);
-      if (res.length === 0) {
-        setload(false);
-      }
-      setchats(res);
+    const res = await managechat.getChatHistoryTitles(user_id, setload);
+    if (res.length === 0) {
       setload(false);
+    }
+    setchats(res);
+    setload(false);
   };
   const deletechat = async (chat_id: string) => {
     setdeleteload(true);
@@ -58,29 +68,29 @@ export default function ChatHistory() {
     getUserChats(user_id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user_id, chats.length]);
-  if(load){
-    return 
-  }
+
   return (
     <ul className="space-y-1.5 p-4">
+      {intialLoad && <Loader />}
       {load ? (
         <Loader />
       ) : (
         chats.map((el, index) => (
-          <motion.li 
-           initial={{ opacity: 0 }}
-           animate={{ opacity: 1, transition: { duration: 1, ease: "easeInOut" } }}
-           key={index}>
-            <div
-              className="flex items-center gap-x-3 py-2 px-3 text-sm text-slate-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 dark:text-slate-400 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-           
-            >
+          <motion.li
+            initial={{ opacity: 0 }}
+            animate={{
+              opacity: 1,
+              transition: { duration: 1, ease: "easeInOut" },
+            }}
+            key={index}
+          >
+            <div className="flex items-center gap-x-3 py-2 px-3 text-sm text-slate-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 dark:text-slate-400 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
               <Dialog open={open}>
                 <ContextMenu>
                   <ContextMenuTrigger>
                     <Link href={`/c/${el.chat_id}`} shallow={true}>
-                      <p className="w-[210px] h-[24px] overflow-hidden">
-                        {el.chat_message}
+                      <p className="w-[210px] h-[24px] overflow-hidden text-black">
+                        {el.chat_query}
                       </p>
                     </Link>
                   </ContextMenuTrigger>

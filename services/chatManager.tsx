@@ -1,13 +1,11 @@
-import { supabase } from "../libs/supabase";
+import { supabase } from "../app/libs/supabase";
 import React from "react";
 export interface ChatDataProps {
   email: string;
   user_id: string | undefined;
   chat_id: string;
-  chat_message: string;
+  chat_query: string;
   chat_response: string;
-  access_token: string;
-  name: string;
 }
 
 export class ManageChat {
@@ -37,6 +35,7 @@ export class ManageChat {
   }
 
   private async insertChatData(chatData: ChatDataProps) {
+    console.log(chatData);
     const query = supabase
       .from(ManageChat.CHAT_HISTORY_TABLE)
       .insert([chatData]);
@@ -49,7 +48,7 @@ export class ManageChat {
   ) {
     const query = supabase
       .from(ManageChat.CHAT_HISTORY_TABLE)
-      .select("chat_message,chat_response,id,user_id")
+      .select("chat_query,chat_response,id,user_id")
       .eq("user_id", user_id)
       .eq("chat_id", chat_id);
 
@@ -79,7 +78,6 @@ export class ManageChat {
       const data = await this.selectChatHistory(user_id, chat_id);
       return data;
     } catch (error) {
-      console.error("Error fetching chat history:", error);
       throw new Error("Unable to get user chat data");
     }
   }
@@ -94,7 +92,7 @@ export class ManageChat {
     try {
       const query = supabase
         .from(ManageChat.CHAT_HISTORY_TABLE)
-        .select("chat_message,user_id,chat_id")
+        .select("chat_query,user_id,chat_id")
         .eq("user_id", user_id);
 
       const data = await this.executeSupabaseQuery(

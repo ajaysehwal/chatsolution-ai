@@ -2,11 +2,11 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { Icons } from "../../components/icons";
+import { Icons } from "../../../components/AppComponents/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { GoogleAuth,Register,ManageCookies } from "../../services";
+import { GoogleAuth,Register,ManageCookies } from "../../../services";
 import { useToast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -32,13 +32,11 @@ async function onSubmit(event: React.SyntheticEvent) {
       password,
       confirmPassword
     );
-    console.log(isValid);
 
     if (isValid.status) {
       const registered = await Registertion.register(email, password, name);
       settoggle(true);
       cookies.setcookie("Secure_S_UID_",registered.data.user.id)
-      console.log(registered.data.user);
     } else {
       const error = isValid.response;
       toast({

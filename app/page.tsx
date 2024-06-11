@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { SkeletonUI, Main } from "./components";
+import { Main } from "../components/AppComponents";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -13,7 +13,7 @@ export default async function Home() {
     return redirect("/login");
   }
   return (
-    <Suspense fallback={<SkeletonUI />}>
+    <Suspense fallback={<Main/>}>
       <Main />
     </Suspense>
   );

@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { ManageChat } from "../services";
+import { ManageChat } from "../../services";
 import {
   Dialog,
   DialogContent,
@@ -11,7 +11,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Loader2 } from "lucide-react";
-import { ManageCookies } from "../services";
+import { ManageCookies } from "../../services";
 const DeleteDialog = ({
   open,
   setOpen,

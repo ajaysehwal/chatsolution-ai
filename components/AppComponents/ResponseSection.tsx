@@ -1,6 +1,8 @@
 import React, { useRef } from "react";
 import { motion } from "framer-motion";
-import { useTextToSpeak } from "../hooks";
+import { useTextToSpeak } from "../../hooks";
+import Image from "next/image";
+import logo from "@/public/logo.png";
 import {
   CopyButton,
   ShareButton,
@@ -9,7 +11,7 @@ import {
   SpeakButton,
   PauseButton,
 } from "./ui";
-import { CopyText } from "../utils";
+import { CopyText } from "../../utils";
 export default function ResponseSection({
   el,
   chunks,
@@ -29,7 +31,7 @@ export default function ResponseSection({
   const emptyClick = () => {
     return null;
   };
- 
+
   return (
     <motion.li
       initial="hidden"
@@ -44,8 +46,8 @@ export default function ResponseSection({
       }}
       className="max-w-4xl py-2 px-4 sm:px-6 lg:px-8 mx-auto flex gap-x-2 sm:gap-x-4"
     >
-      <svg
-        className="flex-shrink-0 w-[2.375rem] h-[2.375rem] rounded-full"
+      {/* <svg
+        
         width="38"
         height="38"
         viewBox="0 0 38 38"
@@ -64,8 +66,15 @@ export default function ResponseSection({
           strokeWidth="1.5"
         />
         <ellipse cx="19" cy="18.6554" rx="3.75" ry="3.6" fill="white" />
-      </svg>
+      </svg> */}
 
+      <Image
+        src={logo}
+        width="38"
+        height="38"
+        className="flex-shrink-0 w-[2.375rem] h-[2.375rem] rounded-full"
+        alt="logo"
+      />
       <div className="grow max-w-[90%] md:max-w-2xl w-full space-y-3">
         <div className="space-y-3">
           <p
@@ -82,7 +91,7 @@ export default function ResponseSection({
                 <LikeButton onClick={emptyClick} />
                 <DislikeButton onClick={emptyClick} />
               </div>
-             <CopyButton onClick={() => CopyText(textRef)} />
+              <CopyButton onClick={() => CopyText(textRef)} />
               <ShareButton onClick={emptyClick} />
             </div>
 

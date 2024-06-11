@@ -1,5 +1,5 @@
 "use client";
-import { supabase } from "../libs/supabase";
+import { supabase } from "../app/libs/supabase";
 import { useEffect, useState } from "react";
 
 interface AuthInterface {

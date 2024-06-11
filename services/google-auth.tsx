@@ -1,5 +1,5 @@
 import React from "react";
-import { supabase } from "../libs/supabase";
+import { supabase } from "../app/libs/supabase";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 export  const GoogleAuth=()=>{

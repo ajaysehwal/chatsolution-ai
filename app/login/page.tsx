@@ -3,8 +3,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { SignIn } from "./components";
 import { motion } from "framer-motion";
-import { useAuth } from "../hooks";
-import Authloading from "../components/loaders/authloading";
+import { useAuth } from "../../hooks";
+import Authloading from "../../components/AppComponents/loaders/authloading";
 
 export default function Login() {
   const {

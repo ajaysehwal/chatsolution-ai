@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { supabase } from "../libs/supabase";
+import { supabase } from "../app/libs/supabase";
 export const useUser = () => {
   const [metadata, setMetadata] = useState<any | {}>({});
   const [userData, setUserData] = useState({});

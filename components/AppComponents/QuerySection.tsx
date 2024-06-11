@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useUser } from "../hooks/useUser";
+import { useUser } from "../../hooks/useUser";
 import { motion } from "framer-motion";
 export default function QuerySection({ query }: { query: string }) {
   const { metadata } = useUser();
@@ -39,7 +39,7 @@ export default function QuerySection({ query }: { query: string }) {
           </span>
 
           <div className="grow mt-2 space-y-3">
-            <p className="text-gray-800 dark:text-gray-200">{query}</p>
+            <p className="text-gray-800 dark:text-gray-800">{query}</p>
           </div>
         </div>
       </div>
