@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { useParams } from "next/navigation";
 
 const Loader = () => {
   return (
@@ -33,6 +34,7 @@ const Loader = () => {
 };
 export default function ChatHistory() {
   const managechat = new ManageChat();
+  const params = useParams<{ token: string }>();
   const cookies = new ManageCookies();
   const [open, setOpen] = React.useState<boolean>(false);
   const [chats, setchats] = React.useState<any[]>([]);
@@ -84,12 +86,14 @@ export default function ChatHistory() {
             }}
             key={index}
           >
-            <div className="flex items-center gap-x-3 py-2 px-3 text-sm text-slate-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 dark:text-slate-400 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
+            <div className={`flex items-center gap-x-3 py-2 px-3 text-sm text-slate-700 rounded-lg ${el.chat_id===params.token?'bg-blue-200 shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px]':''} hover:bg-blue-200 dark:hover:bg-gray-900 dark:text-slate-400 dark:hover:text-slate-300 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600`}>
               <Dialog open={open}>
                 <ContextMenu>
                   <ContextMenuTrigger>
                     <Link href={`/c/${el.chat_id}`} shallow={true}>
-                      <p className="w-[210px] h-[24px] overflow-hidden text-black">
+                      <p
+                        className={`w-[210px] h-[24px] overflow-hidden text-black`}
+                      >
                         {el.chat_query}
                       </p>
                     </Link>

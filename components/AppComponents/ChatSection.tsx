@@ -5,7 +5,7 @@ import QuerySection from "./QuerySection";
 import { GenerativeAI, ManageChat } from "../../services";
 import { useRouter } from "next/navigation";
 import { generateCode } from "../../app/libs";
-import { UseScroller, useAuth, useUser } from "../../hooks";
+import { UseScroller, useUser } from "../../hooks";
 import { useParams } from "next/navigation";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
