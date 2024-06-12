@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import ChatHistory from "./ChatHistory";
 import { AccountMenu } from "./AccountMenu";

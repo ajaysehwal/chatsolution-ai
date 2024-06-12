@@ -1,7 +1,6 @@
 "use client";
 import { supabase } from "../app/libs/supabase";
 import { useEffect, useState } from "react";
-
 interface AuthInterface {
   access_token: string;
   expires_at: number;
@@ -21,7 +20,7 @@ export const useAuth = () => {
     setAuthLoad(true);
     try {
       const session = await supabase.auth.getSession();
-      setAuthLoad(false);      
+      setAuthLoad(false);
       return session;
     } catch (error) {
       setAuthLoad(false);
@@ -44,7 +43,7 @@ export const useAuth = () => {
     const session = await readUserSession();
     setAuthLoad(false);
     if (session?.data.session) {
-      setAuthData(session?.data.session)
+      setAuthData(session?.data.session);
       setAuthState(true);
     } else {
       setAuthState(false);
@@ -53,8 +52,8 @@ export const useAuth = () => {
 
   useEffect(() => {
     getAuthState();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return { authState,authload,logOut,authdata};
+  return { authState, authload, logOut, authdata };
 };
