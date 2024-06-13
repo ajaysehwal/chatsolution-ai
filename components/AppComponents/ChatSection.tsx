@@ -96,7 +96,7 @@ export default function ChatSection() {
             chat_response: res.result,
             name: full_name,
           };
-          addChat({ user_id, chat_id, chat_query });
+          addChat({ user_id: user_id, chat_id: newtoken, chat_query: message });
           handleStoreData(newChatData);
           setmessage("");
           setChatid(newtoken);
