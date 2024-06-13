@@ -14,6 +14,8 @@ import { handleStoreData } from "../../utils";
 import ResponseSection from "./ResponseSection";
 import dynamic from "next/dynamic";
 import { ManageCookies } from "../../services";
+import { useChatStore } from "@/zustand";
+
 const CreatingEnvLoading = dynamic(() => import("./loaders/createEnv"), {
   ssr: false,
 });
@@ -228,7 +230,6 @@ const ChatLoad = () => {
   );
 };
 import { SparklesCore } from "../ui/sparkles";
-import { useChatStore } from "@/zustand";
 
 const HowcanIhelp = () => {
   const [load, setload] = useState<boolean>(true);
