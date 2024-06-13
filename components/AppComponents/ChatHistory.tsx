@@ -4,12 +4,8 @@ import { ManageCookies } from "../../services";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { useChatStore } from "../../zustand";
-import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuTrigger,
-} from "@/components/ui/context-menu";
+import { supabase } from "@/app/libs/supabase";
+
 import {
   Dialog,
   DialogContent,

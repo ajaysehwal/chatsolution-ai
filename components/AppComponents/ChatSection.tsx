@@ -30,6 +30,7 @@ export default function ChatSection() {
   const [message, setmessage] = useState<string>("");
   const [chatdata, setchatdata] = useState<ChatMessage[]>([]);
   const useGenerativeAI = new GenerativeAI();
+  const { addChat } = useChatStore();
   const router = useRouter();
   const manageChat = new ManageChat();
   const cookies = new ManageCookies();
@@ -37,7 +38,7 @@ export default function ChatSection() {
   const { metadata, userData } = useUser();
   const { full_name } = metadata;
   const [chatload, setchatload] = useState<boolean>(false);
-  const [envload,setEnvLoad]=useState<boolean>(false)
+  const [envload, setEnvLoad] = useState<boolean>(false);
   const { email }: any = userData;
   const [load, setload] = useState<boolean>(true);
   const [chunks, setchunk] = useState<string>("");
@@ -82,7 +83,7 @@ export default function ChatSection() {
           handleStoreData(chatData);
           handleScroll(document.body.scrollHeight);
           setmessage("");
-          setEnvLoad(false)
+          setEnvLoad(false);
         } else {
           const newtoken = generateCode(15);
           const newChatData = {
@@ -93,6 +94,7 @@ export default function ChatSection() {
             chat_response: res.result,
             name: full_name,
           };
+          addChat({ user_id, chat_id, chat_query });
           handleStoreData(newChatData);
           setmessage("");
           setChatid(newtoken);
@@ -226,12 +228,13 @@ const ChatLoad = () => {
   );
 };
 import { SparklesCore } from "../ui/sparkles";
+import { useChatStore } from "@/zustand";
 
 const HowcanIhelp = () => {
   const [load, setload] = useState<boolean>(true);
   useEffect(() => {
-   setload(true);
-  },[]);
+    setload(true);
+  }, []);
   return (
     <div className="max-w-4xl px-4 sm:px-6 lg:px-8 mx-auto text-center mt-[50%] lg:mt-[20%] md:mt-[30%] sm:mt-[40%]">
       <div className="w-full flex flex-col items-center justify-center overflow-hidden rounded-md">
