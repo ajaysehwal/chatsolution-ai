@@ -7,7 +7,6 @@ export interface ChatDataProps {
   chat_query: string;
   chat_response: string;
 }
-
 export class ManageChat {
   private static readonly CHAT_HISTORY_TABLE = "chathistory";
 
@@ -35,7 +34,6 @@ export class ManageChat {
   }
 
   private async insertChatData(chatData: ChatDataProps) {
-    console.log(chatData);
     const query = supabase
       .from(ManageChat.CHAT_HISTORY_TABLE)
       .insert([chatData]);
@@ -82,13 +80,8 @@ export class ManageChat {
     }
   }
 
-  async getChatHistoryTitles(
-    user_id: string | undefined,
-    fetchload: React.Dispatch<React.SetStateAction<boolean>>
-  ) {
-
+  async getChatHistoryTitles(user_id: string | undefined) {
     this.checkUserId(user_id, "user_id is not defined");
-    fetchload(true);
     try {
       const query = supabase
         .from(ManageChat.CHAT_HISTORY_TABLE)
@@ -117,22 +110,22 @@ export class ManageChat {
       );
 
       const result = Array.from(FirstChatsChatMessage.values());
-      fetchload(false);
       return result;
     } catch (error) {
-      fetchload(false);
-
       throw new Error("Unable to get user chat data");
     }
   }
   async deletechat(chat_id: string) {
     try {
       const query = supabase
-        .from("chathistory")
+        .from(ManageChat.CHAT_HISTORY_TABLE)
         .delete()
         .eq("chat_id", chat_id);
-      await this.executeSupabaseQuery(query, "Error in delete user chat");
-      return { status: true, response: "User chat delete successfully" };
+      const response = await this.executeSupabaseQuery(
+        query,
+        "Error in delete user chat"
+      );
+      return { status: true, response: response };
     } catch (err) {
       return { status: false, response: "unable to delete user chat" };
     }
@@ -142,7 +135,7 @@ export class ManageChat {
 
     try {
       const query = supabase
-        .from("chathistory")
+        .from(ManageChat.CHAT_HISTORY_TABLE)
         .delete()
         .eq("user_id", user_id);
       await this.executeSupabaseQuery(
