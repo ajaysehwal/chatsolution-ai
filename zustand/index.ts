@@ -4,7 +4,7 @@ import { create } from "zustand";
 type Chat = {
   chat_id: string;
   chat_query: string;
-  user_id: string;
+  user_id: string | undefined;
 };
 
 type ChatState = {
