@@ -1,6 +1,6 @@
-# CSOL-AI: Chat Solution AI
+# COS-AI : Chat Solution AI
 
-CSOL-AI is a Chat AI Test Data Generator built with Next.js and Yarn. This project aims to provide a comprehensive solution for generating synthetic conversational data to test and evaluate Chat AI models. The generated data is designed to simulate human-like conversations with the capabilities inspired by ChatGPT.
+COS-AI is a Chat AI Test Data Generator built with Next.js and Yarn. This project aims to provide a comprehensive solution for generating synthetic conversational data to test and evaluate Chat AI models. The generated data is designed to simulate human-like conversations with the capabilities inspired by ChatGPT.
 
 ## Features
 
