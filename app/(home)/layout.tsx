@@ -21,7 +21,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <div className="relative h-screen w-full lg:ps-64">
           <div className="py-10 lg:py-14">
-            <MobileNav />
+            {/* <MobileNav /> */}
             <Sidebar />
             <AppProvider>{children}</AppProvider>
           </div>

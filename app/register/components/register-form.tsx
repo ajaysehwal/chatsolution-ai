@@ -6,7 +6,7 @@ import { Icons } from "../../../components/AppComponents/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { GoogleAuth,Register,ManageCookies } from "../../../services";
+import { GoogleAuth, Register, ManageCookies } from "../../../services";
 import { useToast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -14,7 +14,6 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function SignUp({ className, ...props }: UserAuthFormProps) {
   const { toast } = useToast();
-
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [email, setEmail] = React.useState<string>("");
   const [name, setname] = React.useState<string>("");
@@ -22,8 +21,9 @@ export function SignUp({ className, ...props }: UserAuthFormProps) {
   const [confirmPassword, setConfirmPassword] = React.useState<string>("");
   const [toggle, settoggle] = React.useState<boolean>(false);
   const Registertion = new Register();
-  const cookies=new ManageCookies();
-async function onSubmit(event: React.SyntheticEvent) {
+  const cookies = new ManageCookies();
+
+  async function onSubmit(event: React.SyntheticEvent) {
     setIsLoading(true);
     event.preventDefault();
     const isValid = await Registertion.validateRegistration(
@@ -36,7 +36,7 @@ async function onSubmit(event: React.SyntheticEvent) {
     if (isValid.status) {
       const registered = await Registertion.register(email, password, name);
       settoggle(true);
-      cookies.setcookie("Secure_S_UID_",registered.data.user.id)
+      cookies.setcookie("Secure_S_UID_", registered.data.user.id);
     } else {
       const error = isValid.response;
       toast({
@@ -54,24 +54,52 @@ async function onSubmit(event: React.SyntheticEvent) {
     <>
       <Toaster />
       {toggle ? (
-        <p className="text-gray-700 font-semibold">
-          Please Check your email for confirmation{" "}
-          <a className="text-blue-700 underline hover:underline-none" href="https://mail.google.com">Click here</a>{" "}
-        </p>
+        <div className="text-center p-6 bg-green-50 rounded-lg">
+          <svg
+            className="w-12 h-12 text-green-500 mx-auto mb-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+          <h3 className="text-lg font-semibold text-green-800 mb-2">
+            Registration Successful!
+          </h3>
+          <p className="text-green-700">
+            Please check your email to confirm your account.{" "}
+            <a
+              className="text-blue-600 font-medium hover:text-blue-500 transition-colors"
+              href="https://mail.google.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Open Gmail
+            </a>
+          </p>
+        </div>
       ) : (
-        <div className={cn("grid gap-6", className)} {...props}>
-          <form className="w-[80%] m-auto" onSubmit={onSubmit}>
-            <div className="grid gap-2">
-              <div className="grid gap-1"> 
-                <Label className="sr-only" htmlFor="email">
-                  full name
+        <div className={cn("space-y-6", className)} {...props}>
+          <form onSubmit={onSubmit}>
+            <div className="space-y-4">
+              <div>
+                <Label
+                  htmlFor="name"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  Full Name
                 </Label>
-
                 <Input
                   id="name"
                   value={name}
-                  placeholder="full name"
+                  placeholder="John Doe"
                   type="text"
+                  className="mt-1"
                   autoCapitalize="none"
                   autoComplete="name"
                   autoCorrect="off"
@@ -79,16 +107,20 @@ async function onSubmit(event: React.SyntheticEvent) {
                   disabled={isLoading}
                 />
               </div>
-              <div className="grid gap-1">
-                <Label className="sr-only" htmlFor="email">
+
+              <div>
+                <Label
+                  htmlFor="email"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Email
                 </Label>
-
                 <Input
                   id="email"
                   value={email}
                   placeholder="name@example.com"
                   type="email"
+                  className="mt-1"
                   autoCapitalize="none"
                   autoComplete="email"
                   autoCorrect="off"
@@ -96,57 +128,81 @@ async function onSubmit(event: React.SyntheticEvent) {
                   disabled={isLoading}
                 />
               </div>
-              <div className="grid gap-1">
-                <Label className="sr-only" htmlFor="email">
+
+              <div>
+                <Label
+                  htmlFor="password"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Password
                 </Label>
                 <Input
                   value={password}
                   id="password"
-                  placeholder="*******"
+                  placeholder="••••••••"
                   type="password"
+                  className="mt-1"
                   autoCapitalize="none"
-                  autoComplete="password"
-                  autoCorrect="off"
+                  autoComplete="new-password"
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isLoading}
                 />
               </div>
-              <div className="grid gap-1">
-                <Label className="sr-only" htmlFor="email">
+
+              <div>
+                <Label
+                  htmlFor="confirmPassword"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Confirm Password
                 </Label>
                 <Input
-                  id="password"
+                  id="confirmPassword"
                   value={confirmPassword}
-                  placeholder="confirm password"
+                  placeholder="••••••••"
                   type="password"
+                  className="mt-1"
                   autoCapitalize="none"
-                  autoComplete="password"
-                  autoCorrect="off"
+                  autoComplete="new-password"
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   disabled={isLoading}
                 />
               </div>
-              <Button disabled={isLoading}>
-                {isLoading && (
+
+              <Button
+                className="w-full bg-blue-600 hover:bg-blue-500 text-white transition-colors"
+                disabled={isLoading}
+              >
+                {isLoading ? (
                   <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                )}
-                Sign Up with Email
+                ) : null}
+                Create Account
               </Button>
             </div>
           </form>
+
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
+              <span className="w-full border-t border-gray-200" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">
+              <span className="bg-white px-2 text-gray-500">
                 Or continue with
               </span>
             </div>
           </div>
-{/*           <GoogleAuth /> */}
+
+          <Button
+            variant="outline"
+            type="button"
+            className="w-full"
+            onClick={() => {
+              /* Add Google Auth handler */
+            }}
+          >
+            <Icons.google className="mr-2 h-4 w-4" />
+            Google
+          </Button>
         </div>
       )}
     </>

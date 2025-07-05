@@ -27,13 +27,13 @@ export default function MessageInput(props: PropsInterface) {
   };
   return (
     <footer className="max-w-4xl mx-auto sticky bottom-0 z-10 p-3 sm:py-6">
-          <PlaceholdersAndVanishInput
-            placeholders={placeholders}
-            onChange={handleChange}
-            onSubmit={onSubmit}
-            message={message}
-            transcript={transcript}
-          />
+      <PlaceholdersAndVanishInput
+        placeholders={placeholders}
+        onChange={handleChange}
+        onSubmit={onSubmit}
+        message={message}
+        transcript={transcript}
+      />
     </footer>
   );
 }

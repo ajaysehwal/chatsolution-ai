@@ -144,19 +144,6 @@
   width: 10px;
 }
 
-::-webkit-scrollbar-thumb {
-  background-color: rgb(62,131,246); /* Tailwind color or custom color */
-  border-radius: 6px;
-  border: 1px solid rgb(62,131,246); /* Tailwind color or custom color */
-}
-
-::-webkit-scrollbar-track {
-  background-color: rgb(62,131,246); /* Tailwind color or custom color */
-  border-radius: 6px;
-}
-
-
-
 .pl {
  width: 6em;
   height: 6em;

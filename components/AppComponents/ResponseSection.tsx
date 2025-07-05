@@ -1,17 +1,11 @@
+"use client";
 import React, { useRef } from "react";
 import { motion } from "framer-motion";
 import { useTextToSpeak } from "../../hooks";
 import Image from "next/image";
 import logo from "@/public/logo.png";
-import {
-  CopyButton,
-  ShareButton,
-  LikeButton,
-  DislikeButton,
-  SpeakButton,
-  PauseButton,
-} from "./ui";
-import { CopyText } from "../../utils";
+import { CopyButton, SpeakButton, PauseButton } from "./ui";
+
 export default function ResponseSection({
   el,
   chunks,
@@ -19,7 +13,7 @@ export default function ResponseSection({
   el: { isNew: boolean; chat_response: string };
   chunks: string;
 }) {
-  const textRef = useRef<HTMLTextAreaElement | null>(null);
+  const textRef = useRef<HTMLParagraphElement | null>(null);
   const { speak, stop, status } = useTextToSpeak(el.chat_response, {
     lang: "en-US",
     pitch: 2,
@@ -28,84 +22,76 @@ export default function ResponseSection({
     voiceName: "hi-IN-Neural2-A",
   });
 
-  const emptyClick = () => {
-    return null;
+  const handleCopy = () => {
+    if (textRef.current) {
+      navigator.clipboard.writeText(textRef.current.textContent || "");
+    }
   };
 
   return (
-    <motion.li
+    <motion.div
       initial="hidden"
       animate="visible"
       variants={{
-        hidden: { opacity: 0, x: "1%" },
+        hidden: { opacity: 0, y: 20 },
         visible: {
           opacity: 1,
-          x: 0,
-          transition: { duration: 1, ease: "easeInOut" },
+          y: 0,
+          transition: { duration: 0.4, ease: "easeOut", delay: 0.1 },
         },
       }}
-      className="max-w-4xl py-2 px-4 sm:px-6 lg:px-8 mx-auto flex gap-x-2 sm:gap-x-4"
+      className="py-6"
     >
-      {/* <svg
-        
-        width="38"
-        height="38"
-        viewBox="0 0 38 38"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <rect width="38" height="38" rx="6" fill="#2563EB" />
-        <path
-          d="M10 28V18.64C10 13.8683 14.0294 10 19 10C23.9706 10 28 13.8683 28 18.64C28 23.4117 23.9706 27.28 19 27.28H18.25"
-          stroke="white"
-          strokeWidth="1.5"
-        />
-        <path
-          d="M13 28V18.7552C13 15.5104 15.6863 12.88 19 12.88C22.3137 12.88 25 15.5104 25 18.7552C25 22 22.3137 24.6304 19 24.6304H18.25"
-          stroke="white"
-          strokeWidth="1.5"
-        />
-        <ellipse cx="19" cy="18.6554" rx="3.75" ry="3.6" fill="white" />
-      </svg> */}
+      <div className="max-w-4xl mx-auto">
+        <div className="flex items-start gap-4">
+          <div className="relative flex-shrink-0">
+            <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-blue-500 rounded-full blur opacity-20" />
+            <Image
+              src={logo}
+              width={32}
+              height={32}
+              className="relative rounded-full ring-2 ring-offset-2 ring-blue-500/30 dark:ring-blue-500/40"
+              alt="COS AI"
+            />
+          </div>
 
-      <Image
-        src={logo}
-        width="38"
-        height="38"
-        className="flex-shrink-0 w-[2.375rem] h-[2.375rem] rounded-full"
-        alt="logo"
-      />
-      <div className="grow max-w-[90%] md:max-w-2xl w-full space-y-3">
-        <div className="space-y-3">
-          <p
-            ref={textRef as React.RefObject<HTMLParagraphElement>}
-            className="text-sm text-gray-800 dark:text-white"
-          >
-            {!el.isNew ? el.chat_response : chunks}
-          </p>
-        </div>
-        <div>
-          <div className="sm:flex sm:justify-between">
-            <div>
-              <div className="inline-flex border border-gray-200 rounded-full p-0.5 dark:border-gray-700">
-                <LikeButton onClick={emptyClick} />
-                <DislikeButton onClick={emptyClick} />
+          <div className="flex-1 space-y-2">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
+                  COS AI
+                </span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  {new Date().toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
               </div>
-              <CopyButton onClick={() => CopyText(textRef)} />
-              <ShareButton onClick={emptyClick} />
+
+              <div className="flex items-center gap-0.5">
+                <CopyButton onClick={handleCopy} />
+                {status === "speaking" ? (
+                  <PauseButton onClick={stop} />
+                ) : (
+                  <SpeakButton onClick={speak} />
+                )}
+              </div>
             </div>
 
-            <div className="mt-1 sm:mt-0">
-              {status === "speaking" && (
-                <>
-                  <PauseButton onClick={stop} />
-                </>
-              )}
-              {status !== "speaking" && <SpeakButton onClick={speak} />}
+            {/* Content */}
+            <div className="relative rounded-xl bg-white dark:bg-gray-800/50 p-4 dark:border-gray-800">
+              <p
+                ref={textRef}
+                className="text-[15px] leading-relaxed text-gray-700 dark:text-gray-200"
+              >
+                {!el.isNew ? el.chat_response : chunks}
+              </p>
             </div>
           </div>
         </div>
       </div>
-    </motion.li>
+    </motion.div>
   );
 }

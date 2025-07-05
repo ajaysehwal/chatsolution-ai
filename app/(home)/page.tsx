@@ -1,9 +1,9 @@
+"use client";
 import { Suspense } from "react";
 import { Main } from "../../components/AppComponents";
-export default async function Home() {
-
+export default function Home() {
   return (
-    <Suspense fallback={<Main/>}>
+    <Suspense fallback={<Main />}>
       <Main />
     </Suspense>
   );

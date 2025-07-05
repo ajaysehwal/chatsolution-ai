@@ -2,9 +2,8 @@
 import React, { useEffect } from "react";
 import { ManageCookies } from "../../services";
 import Link from "next/link";
-import { Loader2 } from "lucide-react";
+import { Loader2, MessageSquare, MoreVertical, Trash2 } from "lucide-react";
 import { useChatStore } from "../../zustand";
-import { supabase } from "@/app/libs/supabase";
 
 import {
   Dialog,
@@ -13,30 +12,35 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogClose,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useParams } from "next/navigation";
 
 const Loader = () => {
   return (
-    <>
-      <div className="animate-pulse rounded-lg py-4 px-3 bg-gradient-to-r from-violet-300 to-blue-600 m-auto"></div>
-      <div className="animate-pulse rounded-lg py-4 px-3 bg-gradient-to-r from-violet-300 to-blue-600 m-auto"></div>
-      <div className="animate-pulse rounded-lg py-4 px-3 bg-gradient-to-r from-violet-300 to-blue-600 m-auto"></div>
-    </>
+    <div className="space-y-3 p-4">
+      {[1, 2, 3].map((i) => (
+        <div
+          key={i}
+          className="flex items-center gap-3 rounded-lg p-3 animate-pulse"
+        >
+          <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700" />
+          <div className="flex-1">
+            <div className="h-4 w-3/4 rounded bg-gray-200 dark:bg-gray-700" />
+          </div>
+        </div>
+      ))}
+    </div>
   );
 };
+
 export default function ChatHistory() {
   const {
     chats,
@@ -50,113 +54,113 @@ export default function ChatHistory() {
   const params = useParams<{ token: string }>();
   const cookies = new ManageCookies();
   const [open, setOpen] = React.useState<boolean>(false);
-  const [intialLoad, setintialLoad] = React.useState<boolean>(true);
+  const [initialLoad, setInitialLoad] = React.useState<boolean>(true);
   const user_id = cookies.getcookie("Secure_S_UID_");
+
   useEffect(() => {
-    setintialLoad(false);
+    setInitialLoad(false);
   }, []);
+
   useEffect(() => {
     getChatHistory(user_id);
-  }, [getChatHistory, deleteChat]);
+  }, [getChatHistory, deleteChat, user_id]);
+
+  if (initialLoad || loading) {
+    return <Loader />;
+  }
 
   return (
-    <ul className="space-y-1.5 p-4">
-      {intialLoad && <Loader />}
-      {loading ? (
-        <Loader />
-      ) : (
-        chats.map((el: any, index) => (
-          <motion.li
-            initial={{ opacity: 0 }}
-            animate={{
-              opacity: 1,
-              transition: { duration: 1, ease: "easeInOut" },
-            }}
-            key={index}
-            className={`flex items-center justify-between w-full rounded-md hover:bg-blue-200 hover:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] py-2 px-3  ${
-              el.chat_id === params.token
-                ? "bg-blue-200 shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px]"
-                : ""
-            }`}
+    <div className="space-y-1">
+      <AnimatePresence>
+        {chats.map((chat: any) => (
+          <motion.div
+            key={chat.chat_id}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className={`group relative flex items-center gap-3 rounded-lg p-3 text-sm transition-colors
+              ${
+                chat.chat_id === params.token
+                  ? "bg-blue-50 text-blue-900 dark:bg-blue-900/20 dark:text-blue-100"
+                  : "hover:bg-gray-100 dark:hover:bg-gray-800"
+              }`}
           >
-            <Link href={`/c/${el.chat_id}`} shallow={true}>
-              <p className={`w-full h-[24px] overflow-hidden text-black`}>
-                {el.chat_query}
-              </p>
+            <MessageSquare className="h-5 w-5 flex-shrink-0 text-gray-500" />
+
+            <Link
+              href={`/c/${chat.chat_id}`}
+              className="flex-1 truncate"
+              shallow={true}
+            >
+              {chat.chat_query}
             </Link>
-            <Dialog open={open}>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Are you absolutely sure?</DialogTitle>
-                  <DialogDescription>
-                    This action cannot be undone. Are you sure you want to
-                    permanently delete this chat from our servers?
-                  </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                  <DialogClose asChild>
-                    <Button
-                      onClick={() => setOpen(false)}
-                      type="button"
-                      variant="secondary"
-                    >
-                      cancel
-                    </Button>
-                  </DialogClose>
-                  <Button
-                    disabled={deleteLoading}
-                    onClick={() => {
-                      deleteChat(currentChatID);
-                      setOpen(false);
-                    }}
-                    type="submit"
-                    variant="destructive"
-                  >
-                    {deleteLoading ? (
-                      <div className="flex">
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Deleting
-                      </div>
-                    ) : (
-                      "confirm"
-                    )}
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+
             <DropdownMenu>
-              <DropdownMenuTrigger>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="1em"
-                  height="1em"
-                  viewBox="0 0 21 21"
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100"
                 >
-                  <g fill="currentColor" fillRule="evenodd">
-                    <circle cx={10.5} cy={10.5} r={1}></circle>
-                    <circle cx={10.5} cy={5.5} r={1}></circle>
-                    <circle cx={10.5} cy={15.5} r={1}></circle>
-                  </g>
-                </svg>
+                  <MoreVertical className="h-4 w-4" />
+                  <span className="sr-only">More</span>
+                </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem>
-                  <Link href={`/c/${el.chat_id}`}>View</Link>
+              <DropdownMenuContent align="end" className="w-[160px]">
+                <DropdownMenuItem asChild>
+                  <Link href={`/c/${chat.chat_id}`} className="cursor-pointer">
+                    View chat
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => {
                     setOpen(true);
-                    setCurrentChatID(el.chat_id);
+                    setCurrentChatID(chat.chat_id);
                   }}
-                  className="text-red-500"
+                  className="text-red-600 dark:text-red-400"
                 >
-                  Delete
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Delete chat
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          </motion.li>
-        ))
-      )}
-    </ul>
+          </motion.div>
+        ))}
+      </AnimatePresence>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Chat</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this chat? This action cannot be
+              undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              disabled={deleteLoading}
+              onClick={() => {
+                deleteChat(currentChatID);
+                setOpen(false);
+              }}
+            >
+              {deleteLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                "Delete"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 }

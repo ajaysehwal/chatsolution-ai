@@ -1,128 +1,69 @@
 "use client";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { SignIn } from "./components";
 import { motion } from "framer-motion";
-import { useAuth } from "../../hooks";
-import Authloading from "../../components/AppComponents/loaders/authloading";
+import { SignIn } from "./components";
+import Image from "next/image";
 
-export default function Login() {
-  const {
-    authState,
-    authload,
-    logOut,
-  }: { authState: boolean; authload: boolean; logOut: any } = useAuth();
-  if (authload) {
-    return <Authloading />;
-  }
-  if (authState) {
-    return (
-      <div
-        className="relative h-[100vh] m-auto flex sm:block place-items-center items-center justify-center md:grid lg:max-w-none lg:px-0"
-        style={{
-          background:
-            "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
-        }}
-      >
-        <motion.div
-          initial={{ scale: 0, y: 0 }}
-          animate={{ scale: 1 }}
-          transition={{
-            duration: 2,
-            ease: "backInOut",
-            times: [0, 0.25, 0.5, 0.85, 1],
-          }}
-          exit={{
-            scale: 0,
-            y: 0,
-          }}
-          className="mx-auto w-full  justify-center place-items-center items-center space-y-6  py-7 px-10 rounded-xl"
-          style={{
-            boxShadow:
-              "rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px",
-          }}
-        >
-          <h1 className="mb-4 text-xl font-bold text-gray-700 dark:text-gray-300">
-            You&apos;re already logged in
-          </h1>
-          <div className='flex gap-2'>
-            <Button variant="default"><Link href={'/'} shallow={true}>Go Back to Home</Link></Button>
-            <Button
-            onClick={() => logOut()}
-            className="w-full bg-red-600 text-white hover:bg-transparent hover:text-red-500 border-red-500 font-semibold"
-          >
-            Log out
-          </Button>
-          </div>
-         
-        </motion.div>
-      </div>
-    );
-  }
+export default function AuthenticationPage() {
   return (
-    <>
-      <div
-        className="relative h-[100vh] m-auto flex sm:block place-items-center items-center justify-center md:grid lg:max-w-none lg:px-0"
-        style={{
-          background:
-            "radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%)",
-        }}
-      >
-        <motion.div
-          initial={{ scale: 0, y: 0 }}
-          animate={{ scale: 1 }}
-          transition={{
-            duration: 2,
-            ease: "backInOut",
-            times: [0, 0.25, 0.5, 0.85, 1],
-          }}
-          exit={{
-            scale: 0,
-            y: 0,
-          }}
-          className="mx-auto w-full  justify-center place-items-center items-center space-y-6  py-7 px-10 rounded-xl"
-          style={{
-            boxShadow:
-              "rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px",
-          }}
-        >
-          <div className="space-y-2 text-center ">
-            <h1 className="text-2xl font-semibold tracking-tight">
-              Welcome back!
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              Enter your email and password below to login your account
-            </p>
-          </div>
-
+    <div className="min-h-screen flex flex-col lg:flex-row">
+      {/* Left side - Image/Brand section */}
+      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-purple-700 to-blue-600">
+        <div className="absolute inset-0 bg-black opacity-10"></div>
+        <div className="relative z-10 flex flex-col justify-center items-center w-full p-12 text-white">
           <motion.div
-            initial={{ scale: 0, y: 0 }}
-            animate={{ scale: 1 }}
-            transition={{
-              duration: 2,
-              ease: "easeInOut",
-              times: [0, 0.25, 0.5, 0.85, 1],
-            }}
-            exit={{
-              scale: 0,
-              y: 0,
-            }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center"
           >
-            <SignIn />
+            <h1 className="text-4xl font-bold mb-6">Welcome Back!</h1>
+            <p className="text-xl mb-8">
+              Continue your journey with ChatSolution AI
+            </p>
+            <div className="w-3/4 mx-auto">
+              <Image
+                src="/logo.png"
+                alt="ChatSolution AI"
+                width={400}
+                height={400}
+                className="rounded-lg shadow-2xl"
+              />
+            </div>
           </motion.div>
+        </div>
+      </div>
 
-          <p className="px-8 text-center text-sm text-muted-foreground">
-            {"Don't have an account?"}
+      {/* Right side - Sign in form */}
+      <div className="flex-1 flex items-center justify-center p-8 lg:p-12 bg-gray-50">
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          className="w-full max-w-md"
+        >
+          <div className="bg-white p-8 rounded-2xl shadow-lg">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-gray-900">Sign In</h2>
+              <p className="mt-2 text-gray-600">
+                Access your ChatSolution AI account
+              </p>
+            </div>
 
-            <Link
-              href="/register"
-              className="underline underline-offset-4 hover:text-primary"
-            >
-              Register
-            </Link>
-          </p>
+            <SignIn />
+
+            <div className="mt-6 text-center text-sm text-gray-600">
+              Don&apos;t have an account?{" "}
+              <Link
+                href="/register"
+                className="font-medium text-blue-600 hover:text-blue-500 transition-colors"
+              >
+                Create one
+              </Link>
+            </div>
+          </div>
         </motion.div>
       </div>
-    </>
+    </div>
   );
 }

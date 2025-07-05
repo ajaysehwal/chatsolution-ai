@@ -15,6 +15,8 @@ import ResponseSection from "./ResponseSection";
 import dynamic from "next/dynamic";
 import { ManageCookies } from "../../services";
 import { useChatStore } from "@/zustand";
+import Image from "next/image";
+import { Code, BookOpen, Sparkles, Zap, ArrowDown } from "lucide-react";
 
 const CreatingEnvLoading = dynamic(() => import("./loaders/createEnv"), {
   ssr: false,
@@ -195,7 +197,7 @@ export default function ChatSection() {
       ) : envload ? (
         <CreatingEnvLoading />
       ) : (
-        <HowcanIhelp />
+        <WelcomeScreen />
       )}
       <MessageInput
         load={load}
@@ -231,30 +233,81 @@ const ChatLoad = () => {
 };
 import { SparklesCore } from "../ui/sparkles";
 
-const HowcanIhelp = () => {
-  const [load, setload] = useState<boolean>(true);
-  useEffect(() => {
-    setload(true);
-  }, []);
+const WelcomeScreen = () => {
   return (
-    <div className="max-w-4xl px-4 sm:px-6 lg:px-8 mx-auto text-center mt-[50%] lg:mt-[20%] md:mt-[30%] sm:mt-[40%]">
-      <div className="w-full flex flex-col items-center justify-center overflow-hidden rounded-md">
-        <h1 className="md:text-3xl text-2xl lg:text-3xl font-bold text-center text-gray-800 relative z-20">
+    <div className="flex flex-col items-center justify-center min-h-[70vh] px-4 py-12">
+      {/* Hero Section */}
+      <div className="relative mb-8">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-40 h-40 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-3xl" />
+        </div>
+      </div>
+
+      {/* Welcome Text */}
+      <div className="text-center space-y-4 relative z-10 max-w-2xl mx-auto">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
           Welcome to COS AI
         </h1>
-        <p className="mt-3 text-gray-600 dark:text-gray-400">
-          Your AI-powered copilot for the web
+        <p className="text-lg text-gray-600 dark:text-gray-300">
+          Your intelligent coding companion. Ask me anything about development, debugging, or best practices.
         </p>
-        <div className="w-[30rem] h-40 absolute">
-          <SparklesCore
-            background="transparent"
-            minSize={0.4}
-            maxSize={1}
-            particleDensity={1200}
-            className="w-full h-full"
-            particleColor="#0000FF"
-          />
-          <div className="absolute inset-0 w-full h-full bg-white [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
+      </div>
+
+      {/* Features Grid */}
+      <div className="grid md:grid-cols-2 gap-6 mt-12 w-full max-w-3xl mx-auto">
+        <FeatureCard
+          icon={<Code className="w-6 h-6" />}
+          title="Code Assistance"
+          description="Get help with coding problems, debugging, and code reviews"
+        />
+        <FeatureCard
+          icon={<BookOpen className="w-6 h-6" />}
+          title="Learning Resources"
+          description="Access documentation, tutorials, and best practices"
+        />
+        <FeatureCard
+          icon={<Sparkles className="w-6 h-6" />}
+          title="Smart Suggestions"
+          description="Receive intelligent code suggestions and optimizations"
+        />
+        <FeatureCard
+          icon={<Zap className="w-6 h-6" />}
+          title="Quick Solutions"
+          description="Get instant answers to your development questions"
+        />
+      </div>
+
+      {/* Getting Started */}
+      <div className="mt-12 text-center">
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+          Start by typing your question below
+        </p>
+        <div className="flex items-center justify-center gap-2 text-blue-600 dark:text-blue-400">
+          <ArrowDown className="w-4 h-4 animate-bounce" />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const FeatureCard = ({ icon, title, description }: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) => {
+  return (
+    <div className="group p-6 rounded-2xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-800/50 hover:shadow-lg transition-all duration-200">
+      <div className="flex items-center gap-4">
+        <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+          {icon}
+        </div>
+        <div>
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+            {title}
+          </h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            {description}
+          </p>
         </div>
       </div>
     </div>
